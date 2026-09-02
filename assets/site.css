@@ -1,0 +1,27 @@
+@keyframes drawStroke {
+  0% {
+    stroke-dashoffset: var(--path-length);
+    opacity: 0.2;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes depthGlow {
+  0%, 100% {
+    filter: drop-shadow(0px 0px 0px rgba(37, 99, 235, 0));
+  }
+  50% {
+    filter: drop-shadow(0px 3px 6px rgba(37, 99, 235, 0.6));
+  }
+}
+
+.run-draw {
+  animation: drawStroke 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+             depthGlow 1.8s ease-in-out forwards;
+}

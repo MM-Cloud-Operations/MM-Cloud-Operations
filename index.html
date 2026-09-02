@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MM Cloud Operations | Enterprise Revenue Operations & Salesforce Architecture</title>
+  <meta name="description" content="MM Cloud Operations is an independent Salesforce architecture and RevOps advisory. We design CPQ systems, API/webhook integrations, and ITGC-compliant Quote-to-Cash pipelines for growing SaaS and Fintech companies.">
+  <meta property="og:title" content="MM Cloud Operations | Enterprise Salesforce & RevOps Architecture">
+  <meta property="og:description" content="Practitioner-led Salesforce CPQ, integration, and ITGC governance advisory for high-growth SaaS and Fintech companies.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mmcloudops.com/">
+  <link rel="canonical" href="https://mmcloudops.com/">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    /* Continuous Horizontal Marquee Animations */
+    @keyframes marquee-left {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    @keyframes marquee-right {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0%); }
+    }
+    .animate-marquee-left {
+      display: flex;
+      width: max-content;
+      animation: marquee-left 30s linear infinite;
+    }
+    .animate-marquee-right {
+      display: flex;
+      width: max-content;
+      animation: marquee-right 30s linear infinite;
+    }
+    .animate-marquee-left:hover,
+    .animate-marquee-right:hover {
+      animation-play-state: paused;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white">
+
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center space-x-3">
+        <div class="w-14 h-14 bg-white border border-slate-200 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+          <svg class="w-11 h-11" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              id="mmLogoPath"
+              d="M 4 22 H 10 L 15 12 L 20 28 L 25 12 L 30 28 L 35 18 H 40"
+              stroke="#2563EB"
+              stroke-width="3.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle cx="20" cy="28" r="2.5" fill="#1D4ED8"/>
+            <circle cx="30" cy="28" r="2.5" fill="#1D4ED8"/>
+          </svg>
+        </div>
+        <span class="text-xl font-bold tracking-tight text-slate-900">MM Cloud Operations</span>
+      </a>
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+        <a href="#about" class="hover:text-blue-600 transition">About Us</a>
+        <a href="#services" class="hover:text-blue-600 transition">Practice Areas</a>
+        <a href="#architecture" class="hover:text-blue-600 transition">Architecture</a>
+        <!-- <a href="#ecosystem" class="hover:text-blue-600 transition">Ecosystem</a> -->
+        <a href="#packages" class="hover:text-blue-600 transition">Engagement Models</a>
+        <a href="careers.html" class="hover:text-blue-600 transition">Careers</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="contact.html" class="inline-flex bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition duration-200 shadow-sm">
+          Contact Us
+        </a>
+        <button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg border border-slate-300 text-slate-700" aria-label="Toggle menu">
+          <svg id="iconOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="iconClose" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white px-6 py-4 space-y-3 text-sm font-medium text-slate-700">
+      <a href="#about" class="block hover:text-blue-600 transition">About Us</a>
+      <a href="#services" class="block hover:text-blue-600 transition">Practice Areas</a>
+      <a href="#architecture" class="block hover:text-blue-600 transition">Architecture</a>
+      <!-- <a href="#ecosystem" class="block hover:text-blue-600 transition">Ecosystem</a> -->
+      <a href="#packages" class="block hover:text-blue-600 transition">Engagement Models</a>
+      <a href="careers.html" class="block hover:text-blue-600 transition">Careers</a>
+    </div>
+  </header>
+
+  <script>
+    (function () {
+      const btn = document.getElementById('mobileMenuBtn');
+      const menu = document.getElementById('mobileMenu');
+      const iconOpen = document.getElementById('iconOpen');
+      const iconClose = document.getElementById('iconClose');
+      btn.addEventListener('click', function () {
+        menu.classList.toggle('hidden');
+        iconOpen.classList.toggle('hidden');
+        iconClose.classList.toggle('hidden');
+      });
+    })();
+  </script>
+  <script src="assets/logo-animation.js"></script>
+
+  <section class="relative py-20 md:py-28 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center space-x-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5 text-xs font-semibold text-blue-700 mb-6">
+          <span>Enterprise Salesforce & RevOps Advisory</span>
+        </div>
+        <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
+          Architecting Scalable Cloud Systems for Enterprise Growth
+        </h1>
+        <p class="text-lg sm:text-xl text-slate-600 leading-relaxed mb-8">
+          We design, automate, and govern complex Salesforce CRM, CPQ, and multi-system integration environments for mid-market and high-growth SaaS and Fintech companies.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="contact.html" class="bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold px-6 py-3.5 rounded-lg transition duration-200 shadow-md shadow-blue-600/10">
+            Schedule Discovery Audit
+          </a>
+          <a href="#services" class="border border-slate-300 hover:bg-slate-100 bg-white text-slate-700 text-center font-semibold px-6 py-3.5 rounded-lg transition duration-200">
+            Explore Capabilities
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="py-20 bg-slate-200/70 border-b border-slate-300">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="text-xs uppercase font-semibold text-blue-600 tracking-wider mb-2">Who We Are</div>
+          <h2 class="text-3xl font-bold text-slate-900 tracking-tight mb-6">Practitioner-Led Cloud Systems Engineering</h2>
+          <p class="text-slate-600 leading-relaxed mb-4">
+            MM Cloud Operations is an independent systems advisory built by senior certified Salesforce architects and operations leaders. We bridge the gap between high-level business strategy and technical cloud execution.
+          </p>
+          <p class="text-slate-600 leading-relaxed mb-6">
+            Unlike traditional broad-scope agencies, we maintain a focused specialization: designing resilient Quote-to-Cash pipelines, managing complex CRM schema, and integrating financial backends under strict ITGC governance standards.
+          </p>
+          <div class="grid grid-cols-2 gap-4 font-semibold text-slate-700 text-sm">
+            <div class="flex items-center"><span class="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>Senior Architect Oversight</div>
+            <div class="flex items-center"><span class="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>Zero Offshore Delays</div>
+            <div class="flex items-center"><span class="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>Enterprise Security First</div>
+            <div class="flex items-center"><span class="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>Transparent Deliverables</div>
+          </div>
+        </div>
+        
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <h3 class="text-xl font-bold text-slate-900">Our Operational Principles</h3>
+          <div class="space-y-4">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <h4 class="font-semibold text-blue-600 text-sm mb-1">1. Decoupled Architecture</h4>
+              <p class="text-xs text-slate-500">We build integrations via API endpoints and webhooks, keeping your primary database clean and secure.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <h4 class="font-semibold text-blue-600 text-sm mb-1">2. Governance & Compliance</h4>
+              <p class="text-xs text-slate-500">Every deployment complies with IT General Controls (ITGC) to ensure audit readiness and field-level data protection.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <h4 class="font-semibold text-blue-600 text-sm mb-1">3. Measurable ROI</h4>
+              <p class="text-xs text-slate-500">We prioritize fixes that shorten sales cycles, resolve CPQ bottlenecks, and eliminate manual data entry.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-14 bg-[#0B0F19] border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div>
+          <div class="text-2xl font-bold text-blue-400 mb-1">Certified</div>
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Salesforce Expertise</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-blue-400 mb-1">SOC / ITGC</div>
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Controls Compliant</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-blue-400 mb-1">Webhook / API</div>
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Custom Integrations</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-blue-400 mb-1">Quote-to-Cash</div>
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">CPQ Optimization</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="py-20 bg-slate-200/70 border-b border-slate-300">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h2 class="text-3xl font-bold text-slate-900 tracking-tight mb-4">Core Practice Areas</h2>
+        <p class="text-slate-600">Specialized technical administration and systems engineering built to handle high transactional volume.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:border-blue-400 transition">
+          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">01</div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">Salesforce Core & Automation</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">Advanced Flow architecture, system optimization, custom object schema design, and declarative administration.</p>
+        </div>
+        <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:border-blue-400 transition">
+          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">02</div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">Salesforce CPQ & Monetization</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">Product catalog structuring, complex price rules, amendment workflows, and Quote-to-Cash process streamlining.</p>
+        </div>
+        <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:border-blue-400 transition">
+          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">03</div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">Custom API & Webhook Pipelines</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">Connecting web portals and banking frontends directly to CRM backends using secure Webhooks, Zapier, and REST APIs.</p>
+        </div>
+        <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:border-blue-400 transition">
+          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">04</div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">ITGC & System Governance</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">IT General Controls compliance, audit readiness, field-level security governance, and enterprise change management.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="architecture" class="py-20 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="text-xs uppercase font-semibold text-blue-600 tracking-wider mb-2">Featured Integration Pattern</div>
+          <h2 class="text-3xl font-bold text-slate-900 tracking-tight mb-6">Minted Edge Enterprise Pipeline</h2>
+          <p class="text-slate-600 leading-relaxed mb-6">
+            Designed and deployed a resilient integration connecting a customer-facing banking frontend directly into Salesforce custom object structures without direct database exposure.
+          </p>
+          <ul class="space-y-3 text-sm text-slate-700 mb-8">
+            <li class="flex items-center"><span class="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>Real-time Webhook intake handling asynchronous payload data.</li>
+            <li class="flex items-center"><span class="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>Automated deduplication and lead matching via Salesforce Flow engines.</li>
+            <li class="flex items-center"><span class="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>Built-in error catching and exception logging for 100% execution visibility.</li>
+          </ul>
+        </div>
+        <div class="bg-slate-900 text-white p-8 rounded-2xl border border-slate-800 shadow-lg">
+          <div class="text-xs font-mono text-slate-400 mb-4">// System Architecture Overview</div>
+          <div class="space-y-4 font-mono text-xs">
+            <div class="p-4 bg-slate-800 rounded border border-slate-700 text-blue-400">[Banking Frontend Web App] ──► Webhook Trigger</div>
+            <div class="p-4 bg-slate-800 rounded border border-slate-700 text-slate-300"> └──► Middleware & Validation Layer</div>
+            <div class="p-4 bg-slate-800 rounded border border-slate-700 text-emerald-400">      └──► Salesforce Flow Automation (Ingest & Route)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hidden until partner accounts are finalized. Uncomment to re-enable.
+  <section id="ecosystem" class="py-20 bg-[#0B0F19] text-white border-b border-slate-800/80 overflow-hidden relative">
+    
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none"></div>
+
+    <div class="absolute inset-0 bg-blue-600/5 blur-[140px] pointer-events-none"></div>
+
+    <div class="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-[#0B0F19] to-transparent z-20 pointer-events-none"></div>
+    <div class="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-[#0B0F19] to-transparent z-20 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10 mb-14 text-center">
+      <div class="inline-flex items-center space-x-2 bg-blue-950/60 border border-blue-800/50 rounded-full px-4 py-1 text-xs font-semibold text-blue-400 mb-3 backdrop-blur-sm">
+        <span>Supported Technology Stack</span>
+      </div>
+      <h2 class="text-3xl font-extrabold tracking-tight text-white">Our Partner & Platform Ecosystem</h2>
+      <p class="text-slate-400 text-sm mt-3 max-w-xl mx-auto">Including the full Salesforce platform — core CRM, Flow automation, and CPQ for Quote-to-Cash.</p>
+    </div>
+
+    <div class="relative z-10">
+
+      <div class="flex overflow-hidden relative">
+        <div class="animate-marquee-left flex items-center gap-20">
+
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/salesforce.svg" alt="Salesforce" class="h-14 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Salesforce</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/conga.svg" alt="Conga" class="h-12 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Conga</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/zapier.svg" alt="Zapier" class="h-14 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Zapier</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/make.svg" alt="Make.com" class="h-14 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Make.com</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/retool.svg" alt="Retool" class="h-14 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Retool</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/leandata.svg" alt="LeanData" class="h-12 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">LeanData</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/outreach.svg" alt="Outreach" class="h-12 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Outreach</span>
+          </div>
+
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/salesforce.svg" alt="Salesforce" class="h-14 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Salesforce</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/conga.svg" alt="Conga" class="h-12 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Conga</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/zapier.svg" alt="Zapier" class="h-14 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Zapier</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/make.svg" alt="Make.com" class="h-14 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Make.com</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/retool.svg" alt="Retool" class="h-14 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Retool</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/leandata.svg" alt="LeanData" class="h-12 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">LeanData</span>
+          </div>
+          <div class="flex flex-col items-center gap-4 shrink-0 opacity-80 hover:opacity-100 transition duration-300 group">
+            <img src="assets/logos/outreach.svg" alt="Outreach" class="h-12 w-auto group-hover:scale-110 transition duration-300">
+            <span class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Outreach</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+  -->
+
+  <section id="packages" class="py-20 bg-slate-200/70 border-b border-slate-300">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <div class="text-xs uppercase font-semibold text-blue-600 tracking-wider mb-2">Flexible Structures</div>
+        <h2 class="text-3xl font-bold text-slate-900 tracking-tight mb-4">Engagement Models</h2>
+        <p class="text-slate-600">Targeted project execution or long-term system administration tailored for your enterprise growth rate.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white border border-slate-200 p-8 rounded-2xl flex flex-col justify-between shadow-sm">
+          <div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Systems Audit</h3>
+            <p class="text-slate-500 text-xs mb-6">Comprehensive review of your current Salesforce org, security controls, and technical debt.</p>
+            <div class="text-3xl font-bold text-slate-900 mb-6">Fixed Fee</div>
+            <ul class="space-y-3 text-sm text-slate-700 mb-8">
+              <li class="flex items-center"><span class="text-blue-600 mr-2">✓</span> Security & Access Governance Check</li>
+              <li class="flex items-center"><span class="text-blue-600 mr-2">✓</span> Automation Health Assessment</li>
+              <li class="flex items-center"><span class="text-blue-600 mr-2">✓</span> Prioritized Remediation Roadmap</li>
+            </ul>
+          </div>
+          <a href="contact.html" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-center font-semibold py-3 rounded-lg transition border border-slate-300">Request Audit</a>
+        </div>
+        <div class="bg-white border-2 border-blue-600 p-8 rounded-2xl flex flex-col justify-between relative shadow-md">
+          <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Most Popular</div>
+          <div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Integration Sprint</h3>
+            <p class="text-slate-500 text-xs mb-6">Dedicated project execution for CPQ builds, Webhook integrations, or data pipelines.</p>
+            <div class="text-3xl font-bold text-slate-900 mb-6">Project Based</div>
+            <ul class="space-y-3 text-sm text-slate-700 mb-8">
+              <li class="flex items-center"><span class="text-blue-600 mr-2">✓</span> End-to-End Architecture & Build</li>
+              <li class="flex items-center"><span class="text-blue-600 mr-2">✓</span> Custom Webhook / API Engineering</li>
+              <li class="flex items-center"><span class="text-blue-600 mr-2">✓</span> User Acceptance Testing & Deployment</li>
+            </ul>
+          </div>
+          <a href="contact.html" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold py-3 rounded-lg transition">Start Project</a>
+        </div>
+        <div class="bg-white border border-slate-200 p-8 rounded-2xl flex flex-col justify-between shadow-sm">
+          <div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Managed Partner</h3>
+            <p class="text-slate-500 text-xs mb-6">Ongoing senior architectural oversight, maintenance, and strategic RevOps support.</p>
+            <div class="text-3xl font-bold text-slate-900 mb-6">Monthly Retainer</div>
+            <ul class="space-y-3 text-sm text-slate-700 mb-8">
+              <li class="flex items-center"><span class="text-blue-600 mr-2">✓</span> Dedicated Systems Administration</li>
+              <li class="flex items-center"><span class="text-blue-600 mr-2">✓</span> Priority Issue Resolution</li>
+              <li class="flex items-center"><span class="text-blue-600 mr-2">✓</span> Monthly Release Management</li>
+            </ul>
+          </div>
+          <a href="contact.html" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-center font-semibold py-3 rounded-lg transition border border-slate-300">Explore Retainer</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 bg-[#0B0F19] border-t border-slate-800 text-center">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to Modernize Your Enterprise Cloud Stack?</h2>
+      <p class="text-slate-400 mb-8 text-lg">Connect directly with our lead architects to review your custom requirements.</p>
+      <a href="contact.html" class="inline-flex bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg transition duration-200 shadow-md shadow-blue-600/20">
+        Initiate System Inquiry
+      </a>
+    </div>
+  </section>
+
+  <footer class="bg-slate-900 border-t border-slate-800 pt-16 pb-12 text-slate-400 text-sm">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+      <div class="lg:col-span-2 space-y-4">
+        <a href="index.html" class="flex items-center space-x-3">
+          <svg class="w-9 h-9 shrink-0" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M 4 22 H 10 L 15 12 L 20 28 L 25 12 L 30 28 L 35 18 H 40"
+              stroke="#60A5FA"
+              stroke-width="3.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle cx="20" cy="28" r="2.5" fill="#93C5FD"/>
+            <circle cx="30" cy="28" r="2.5" fill="#93C5FD"/>
+          </svg>
+          <span class="text-lg font-bold tracking-tight text-white">MM Cloud Operations</span>
+        </a>
+        <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
+          Independent revenue operations and enterprise Salesforce architectural advisory. We engineer scalable quote-to-cash workflows, API integrations, and ITGC-compliant systems.
+        </p>
+        <div class="text-xs text-slate-300 font-medium">
+          Direct Contact: <a href="mailto:info@mmcloudops.com" class="text-blue-400 hover:underline">info@mmcloudops.com</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold text-white uppercase tracking-wider mb-4">Navigation</h4>
+        <ul class="space-y-2.5 text-xs">
+          <li><a href="#about" class="hover:text-white transition">About Us</a></li>
+          <li><a href="#services" class="hover:text-white transition">Practice Areas</a></li>
+          <li><a href="#architecture" class="hover:text-white transition">Architecture Proof</a></li>
+          <!-- <li><a href="#ecosystem" class="hover:text-white transition">Partner Ecosystem</a></li> -->
+          <li><a href="#packages" class="hover:text-white transition">Engagement Models</a></li>
+          <li><a href="careers.html" class="hover:text-white transition">Careers</a></li>
+          <li><a href="contact.html" class="hover:text-white transition">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold text-white uppercase tracking-wider mb-4">Practice Areas</h4>
+        <ul class="space-y-2.5 text-xs">
+          <li><a href="contact.html" class="hover:text-white transition">Salesforce Administration</a></li>
+          <li><a href="contact.html" class="hover:text-white transition">Salesforce CPQ Engineering</a></li>
+          <li><a href="contact.html" class="hover:text-white transition">API & Webhook Integration</a></li>
+          <li><a href="contact.html" class="hover:text-white transition">ITGC & Governance Audit</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold text-white uppercase tracking-wider mb-4">Engagement</h4>
+        <ul class="space-y-2.5 text-xs">
+          <li><a href="contact.html" class="hover:text-white transition">Fixed-Fee System Audit</a></li>
+          <li><a href="contact.html" class="hover:text-white transition">Project Integration Sprint</a></li>
+          <li><a href="contact.html" class="hover:text-white transition">Managed Partner Retainer</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-4">
+      <div>&copy; 2026 MM Cloud Operations. All rights reserved.</div>
+      <div>Enterprise Security & Data Confidentiality Assured.</div>
+    </div>
+  </footer>
+
+</body>
+</html>
