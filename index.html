@@ -108,6 +108,35 @@
     })();
   </script>
   <script src="assets/logo-animation.js"></script>
+  <script>
+    (function () {
+      // Keep the address bar clean on the homepage: clicking in-page nav
+      // links scrolls smoothly without appending #about, #services, etc.
+      document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+        var targetId = link.getAttribute('href').slice(1);
+        if (!targetId) return;
+        link.addEventListener('click', function (e) {
+          var target = document.getElementById(targetId);
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          history.replaceState(null, '', window.location.pathname);
+        });
+      });
+
+      // If arriving here from another page (e.g. careers.html#about),
+      // scroll to the right section first, then clean the hash away.
+      if (window.location.hash) {
+        var initialTarget = document.getElementById(window.location.hash.slice(1));
+        if (initialTarget) {
+          setTimeout(function () {
+            initialTarget.scrollIntoView({ block: 'start' });
+            history.replaceState(null, '', window.location.pathname);
+          }, 0);
+        }
+      }
+    })();
+  </script>
 
   <section class="relative py-20 md:py-28 bg-white border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-6">
