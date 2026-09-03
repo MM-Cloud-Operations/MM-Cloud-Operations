@@ -272,21 +272,22 @@
             The result: a fully automated intake process the client's team hasn't had to think about since.
           </p>
         </div>
-        <div>
-          <details class="group bg-slate-50 rounded-2xl border border-slate-200">
-            <summary class="cursor-pointer select-none px-6 py-4 text-sm font-semibold text-blue-600 flex items-center justify-between">
-              See the technical breakdown
-              <span class="text-slate-400 group-open:rotate-180 transition-transform">&#9660;</span>
-            </summary>
-            <div class="bg-slate-900 text-white p-8 rounded-b-2xl">
-              <div class="text-xs font-mono text-slate-400 mb-4">// System Architecture Overview</div>
-              <div class="space-y-4 font-mono text-xs">
-                <div class="p-4 bg-slate-800 rounded border border-slate-700 text-blue-400">[Banking Frontend Web App] ──► Webhook Trigger</div>
-                <div class="p-4 bg-slate-800 rounded border border-slate-700 text-slate-300"> └──► Middleware & Validation Layer</div>
-                <div class="p-4 bg-slate-800 rounded border border-slate-700 text-emerald-400">      └──► Salesforce Flow Automation (Ingest & Route)</div>
-              </div>
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <h3 class="text-xl font-bold text-slate-900">How It's Built</h3>
+          <div class="space-y-4">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <h4 class="font-semibold text-blue-600 text-sm mb-1">1. Signup Triggers a Webhook</h4>
+              <p class="text-xs text-slate-500">The banking frontend fires a secure webhook the moment a new signup happens.</p>
             </div>
-          </details>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <h4 class="font-semibold text-blue-600 text-sm mb-1">2. Middleware Validates the Data</h4>
+              <p class="text-xs text-slate-500">The payload passes through a validation layer before it ever touches Salesforce directly.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <h4 class="font-semibold text-blue-600 text-sm mb-1">3. Salesforce Ingests &amp; Routes</h4>
+              <p class="text-xs text-slate-500">Flow automation picks up the validated record and routes it automatically — no manual entry required.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
