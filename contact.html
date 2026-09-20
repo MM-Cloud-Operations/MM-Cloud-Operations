@@ -127,33 +127,33 @@
         </div>
 
         <div class="lg:col-span-7">
-          <form action="https://api.web3forms.com/submit" method="POST" class="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm space-y-6">
+          <form id="intakeForm" action="https://api.web3forms.com/submit" method="POST" class="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm space-y-6">
             
             <input type="hidden" name="access_key" value="37a1870e-0bdf-4982-b450-69fc2c853f80">
             <input type="hidden" name="redirect" value="https://mmcloudops.com/thank-you">
             <input type="hidden" name="subject" value="New Intake Inquiry - MM Cloud Operations">
-            <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+            <input type="checkbox" id="botcheck" name="botcheck" class="hidden" style="display: none;">
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Full Name *</label>
-                <input type="text" name="name" required placeholder="John Doe" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                <input type="text" id="fullName" name="name" required placeholder="John Doe" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Work Email *</label>
-                <input type="email" name="email" required placeholder="john@company.com" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                <input type="email" id="workEmail" name="email" required placeholder="john@company.com" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
               </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Company Name</label>
-                <input type="text" name="company" placeholder="Acme SaaS Inc." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Company Name *</label>
+                <input type="text" id="companyName" name="company" required placeholder="Acme SaaS Inc." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
               </div>
               
               <div>
                 <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Primary Service Needed *</label>
-                <select name="service_type" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                <select id="serviceType" name="service_type" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
                   <option value="" disabled selected>Select a practice area...</option>
                   <option value="System Audit">Systems Audit</option>
                   <option value="CPQ & Monetization">Revenue Operations</option>
@@ -166,10 +166,10 @@
 
             <div>
               <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Project Scope & Current Stack Description *</label>
-              <textarea name="project_description" required rows="5" placeholder="Briefly describe your current setup (e.g., Salesforce, NetSuite, Zuora), key bottlenecks, and primary project goals..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition"></textarea>
+              <textarea id="projectDescription" name="project_description" required rows="5" placeholder="Briefly describe your current setup (e.g., Salesforce, NetSuite, Zuora), key bottlenecks, and primary project goals..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition"></textarea>
             </div>
 
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 rounded-lg transition duration-200 shadow-md shadow-blue-600/10">
+            <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 rounded-lg transition duration-200 shadow-md shadow-blue-600/10">
               Submit Intake Request
             </button>
 
@@ -183,6 +183,98 @@
 
     </div>
   </main>
+
+  <!--
+    Hidden Salesforce Web-to-Lead leg. Kept as a real <form> targeting a
+    hidden iframe (not a fetch call) because webto.salesforce.com does not
+    return CORS headers, so a background POST via fetch would be blocked by
+    the browser. Posting a normal form to a same-page iframe sidesteps that,
+    since CORS only governs script-readable responses, not form navigation.
+    This form is never shown to the visitor; intakeForm.js populates and
+    submits it right before/alongside the visible Web3Forms submission.
+  -->
+  <iframe name="sfHiddenFrame" style="display:none;" title="Salesforce submission (hidden)"></iframe>
+  <form id="sfLeadForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00Dg800000GiegT" method="POST" target="sfHiddenFrame" style="display:none;">
+    <input type="hidden" name="oid" value="00Dg800000GiegT">
+    <input type="hidden" name="retURL" value="https://mmcloudops.com/thank-you">
+    <input type="hidden" name="lead_source" id="sfLeadSource" value="Web">
+    <input type="hidden" name="first_name" id="sfFirstName">
+    <input type="hidden" name="last_name" id="sfLastName">
+    <input type="hidden" name="email" id="sfEmail">
+    <input type="hidden" name="company" id="sfCompany">
+    <input type="hidden" name="00Ng800000mor5V" id="sfPracticeArea">
+    <input type="hidden" name="description" id="sfDescription">
+  </form>
+
+  <script>
+    (function () {
+      var form = document.getElementById('intakeForm');
+      var submitBtn = document.getElementById('submitBtn');
+      var sfForm = document.getElementById('sfLeadForm');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Honeypot: if this hidden checkbox got checked, a bot filled the
+        // form. Pretend to succeed and bail out without submitting anywhere.
+        if (document.getElementById('botcheck').checked) {
+          window.location.href = 'https://mmcloudops.com/thank-you';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
+        var fullName = document.getElementById('fullName').value.trim();
+        var lastSpace = fullName.lastIndexOf(' ');
+        var firstName = lastSpace > -1 ? fullName.slice(0, lastSpace) : '';
+        var lastName = lastSpace > -1 ? fullName.slice(lastSpace + 1) : fullName;
+
+        var email = document.getElementById('workEmail').value.trim();
+        var company = document.getElementById('companyName').value.trim();
+        var serviceType = document.getElementById('serviceType').value;
+        var description = document.getElementById('projectDescription').value.trim();
+
+        // --- Leg 1: Salesforce Web-to-Lead (hidden iframe form) ---
+        document.getElementById('sfFirstName').value = firstName;
+        document.getElementById('sfLastName').value = lastName;
+        document.getElementById('sfEmail').value = email;
+        document.getElementById('sfCompany').value = company;
+        document.getElementById('sfPracticeArea').value = serviceType;
+        document.getElementById('sfDescription').value = description;
+        sfForm.submit();
+
+        // --- Leg 2: Web3Forms (JSON fetch, CORS-enabled) ---
+        var payload = {
+          access_key: '37a1870e-0bdf-4982-b450-69fc2c853f80',
+          subject: 'New Intake Inquiry - MM Cloud Operations',
+          name: fullName,
+          email: email,
+          company: company,
+          service_type: serviceType,
+          project_description: description
+        };
+
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+          .catch(function (err) {
+            // Web3Forms failed, but the Salesforce leg above may have
+            // succeeded independently — don't block the redirect on this.
+            console.error('[intake] Web3Forms submission failed:', err);
+          })
+          .finally(function () {
+            // Give the hidden iframe a brief moment to finish posting before
+            // navigating away from the page.
+            setTimeout(function () {
+              window.location.href = 'https://mmcloudops.com/thank-you';
+            }, 600);
+          });
+      });
+    })();
+  </script>
 
   <footer class="bg-slate-900 border-t border-slate-800 pt-16 pb-12 text-slate-400 text-sm">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
