@@ -89,10 +89,13 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
         
         <div class="lg:col-span-5">
-          <div class="bg-[#0B0F19] rounded-2xl p-8 h-full space-y-8 shadow-xl">
+          <div class="relative isolate overflow-hidden bg-[#0B0F19] rounded-2xl p-8 h-full flex flex-col gap-8 shadow-xl">
+            <div class="absolute inset-0 -z-10 pointer-events-none bg-[linear-gradient(to_right,#1e293b40_1px,transparent_1px),linear-gradient(to_bottom,#1e293b40_1px,transparent_1px)] bg-[size:3rem_3rem]" aria-hidden="true"></div>
+            <div class="absolute inset-0 -z-10 pointer-events-none" style="background: radial-gradient(70% 55% at 100% 100%, rgba(37,99,235,0.30), transparent 70%)" aria-hidden="true"></div>
+            <canvas id="miniGlobe" class="absolute top-5 right-5 w-28 h-28 sm:w-32 sm:h-32 pointer-events-none" aria-hidden="true"></canvas>
             <div>
               <div class="text-xs uppercase font-semibold text-blue-400 tracking-wider mb-2">Get In Touch</div>
-              <h1 class="text-4xl font-bold text-white tracking-tight mb-4">Let's Discuss Your Architecture</h1>
+              <h1 class="text-4xl font-bold text-white tracking-tight mb-4 pr-24 sm:pr-28">Let's Discuss Your Architecture</h1>
               <p class="text-slate-400 leading-relaxed text-sm">
                 Whether you need a Quote-to-Cash build, customer service and case routing setup, custom API integration pipelines, or a system health audit, our senior architects are ready to review your stack.
               </p>
@@ -100,9 +103,7 @@
 
             <div class="space-y-4 pt-4 border-t border-slate-800">
               <div class="flex items-start space-x-4">
-                <div class="w-10 h-10 bg-blue-600/10 border border-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 font-bold flex-shrink-0">
-                  @
-                </div>
+                <div class="w-10 h-10 bg-blue-600/10 border border-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 font-bold flex-shrink-0"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></div>
                 <div>
                   <div class="text-xs text-slate-500 uppercase font-medium">Direct Email Inquiry</div>
                   <a href="mailto:info@mmcloudops.com" class="text-white font-medium hover:text-blue-400 transition">info@mmcloudops.com</a>
@@ -110,14 +111,30 @@
               </div>
 
               <div class="flex items-start space-x-4">
-                <div class="w-10 h-10 bg-blue-600/10 border border-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 font-bold flex-shrink-0">
-                  ⚡
-                </div>
+                <div class="w-10 h-10 bg-blue-600/10 border border-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 font-bold flex-shrink-0"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg></div>
                 <div>
                   <div class="text-xs text-slate-500 uppercase font-medium">Response SLA</div>
                   <div class="text-white font-medium">Within 24 business hours</div>
                 </div>
               </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800">
+              <div class="text-xs uppercase font-semibold text-slate-500 tracking-wider mb-4">What Happens Next</div>
+              <ol class="space-y-4">
+                <li class="flex items-start gap-3">
+                  <span class="w-6 h-6 shrink-0 rounded-full border border-blue-400/40 bg-blue-500/10 text-cyan-300 text-xs font-bold flex items-center justify-center">1</span>
+                  <div><div class="text-sm font-semibold text-white">Your note is read personally</div><div class="text-xs text-slate-400">No sales queue, no auto-responder maze.</div></div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="w-6 h-6 shrink-0 rounded-full border border-blue-400/40 bg-blue-500/10 text-cyan-300 text-xs font-bold flex items-center justify-center">2</span>
+                  <div><div class="text-sm font-semibold text-white">We reply within 24 business hours</div><div class="text-xs text-slate-400">With questions, or a proposed next step.</div></div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="w-6 h-6 shrink-0 rounded-full border border-blue-400/40 bg-blue-500/10 text-cyan-300 text-xs font-bold flex items-center justify-center">3</span>
+                  <div><div class="text-sm font-semibold text-white">You get a clear, fixed scope</div><div class="text-xs text-slate-400">Scope and pricing agreed before any work starts.</div></div>
+                </li>
+              </ol>
             </div>
 
             <div class="p-4 bg-slate-800/60 border border-slate-700 rounded-xl text-xs text-slate-300">
@@ -126,9 +143,15 @@
           </div>
         </div>
 
-        <div class="lg:col-span-7">
-          <form id="contactForm" action="https://api.web3forms.com/submit" method="POST" class="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm space-y-6">
+        <div class="lg:col-span-7 flex flex-col">
+          <form id="contactForm" action="https://api.web3forms.com/submit" method="POST" class="relative flex-1 bg-white border border-slate-200 p-8 rounded-2xl shadow-xl flex flex-col gap-6">
             
+            <div class="absolute top-0 left-8 right-8 h-1 rounded-b-full bg-gradient-to-r from-blue-600 via-blue-400 to-cyan-400" aria-hidden="true"></div>
+            <div>
+              <h2 class="text-xl font-bold text-slate-900">Tell us about your project</h2>
+              <p class="text-sm text-slate-500 mt-1">Fields marked * are required.</p>
+            </div>
+
             <input type="hidden" name="access_key" value="37a1870e-0bdf-4982-b450-69fc2c853f80">
             <input type="hidden" name="redirect" value="https://mmcloudops.com/thank-you">
             <input type="hidden" name="subject" value="New Intake Inquiry - MM Cloud Operations">
@@ -137,23 +160,23 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Full Name *</label>
-                <input type="text" name="name" required placeholder="John Doe" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                <input type="text" name="name" required placeholder="John Doe" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/10 transition">
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Work Email *</label>
-                <input type="email" name="email" required placeholder="john@company.com" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                <input type="email" name="email" required placeholder="john@company.com" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/10 transition">
               </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Company Name *</label>
-                <input type="text" name="company" required placeholder="Acme SaaS Inc." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                <input type="text" name="company" required placeholder="Acme SaaS Inc." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/10 transition">
               </div>
               
               <div>
                 <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Primary Service Needed *</label>
-                <select name="service_type" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                <select name="service_type" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/10 transition">
                   <option value="" disabled selected>Select a service...</option>
                   <option value="System Audit">Salesforce Systems Audit</option>
                   <option value="Service & Case Management">Customer Service & Case Management</option>
@@ -166,17 +189,15 @@
               </div>
             </div>
 
-            <div>
+            <div class="flex flex-col flex-1">
               <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Project Scope & Current Stack Description *</label>
-              <textarea name="project_description" required rows="5" placeholder="Briefly describe your current setup (e.g., Salesforce, NetSuite, Zuora), key bottlenecks, and primary project goals..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition"></textarea>
+              <textarea name="project_description" required rows="5" placeholder="Briefly describe your current setup (e.g., Salesforce, NetSuite, Zuora), key bottlenecks, and primary project goals..." class="flex-1 min-h-[8rem] w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/10 transition"></textarea>
             </div>
 
-            <button id="submitBtn" type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 rounded-lg transition duration-200 shadow-md shadow-blue-600/10">
-              Submit Intake Request
-            </button>
+            <button id="submitBtn" type="submit" class="group w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-3.5 rounded-lg transition duration-200 shadow-lg shadow-blue-600/25">Submit Intake Request <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></button>
 
-            <div class="text-center text-xs text-slate-500">
-              Protected by enterprise SSL encryption. Zero sales spam guaranteed.
+            <div class="flex items-center justify-center gap-1.5 text-xs text-slate-500">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>Protected by enterprise SSL encryption. Zero sales spam guaranteed.
             </div>
           </form>
 
@@ -270,7 +291,7 @@
       var sfForm = document.getElementById('sfLeadForm');
       var sfFrame = document.getElementById('sfFrame');
       var btn = document.getElementById('submitBtn');
-      var btnLabel = btn.textContent;
+      var btnLabel = btn.innerHTML;
       var THANK_YOU = '/thank-you';
 
       function splitName(full) {
@@ -330,9 +351,159 @@
         if (event.persisted) {
           form.reset();
           btn.disabled = false;
-          btn.textContent = btnLabel;
+          btn.innerHTML = btnLabel;
         }
       });
+    })();
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // Small glowing globe for the contact panel (same style as the homepage hero)
+    (function () {
+      var canvas = document.getElementById('miniGlobe');
+      if (!canvas || !window.THREE || !canvas.clientWidth || !canvas.clientHeight) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var renderer;
+      try { renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true }); } catch (e) { return; }
+      var PR = Math.min(window.devicePixelRatio || 1, 2);
+      renderer.setPixelRatio(PR);
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+      renderer.setClearColor(0x000000, 0);
+
+      var scene = new THREE.Scene(), CAM = 17, R = 5, NEAR = CAM - R, FAR = CAM + R;
+      var camera = new THREE.PerspectiveCamera(40, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+      camera.position.z = CAM;
+      var globe = new THREE.Group(); globe.rotation.x = 0.35; scene.add(globe);
+
+      var gc = document.createElement('canvas'); gc.width = gc.height = 128;
+      var gx = gc.getContext('2d'), gr = gx.createRadialGradient(64, 64, 8, 64, 64, 64);
+      gr.addColorStop(0, 'rgba(59,130,246,0.5)'); gr.addColorStop(0.5, 'rgba(37,99,235,0.15)'); gr.addColorStop(1, 'rgba(37,99,235,0)');
+      gx.fillStyle = gr; gx.fillRect(0, 0, 128, 128);
+      var glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(gc), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false }));
+      glow.scale.set(14, 14, 1); glow.position.z = -3; scene.add(glow);
+
+      var depth = 'float k = clamp(1.0 - (d - uNear) / (uFar - uNear), 0.0, 1.0);';
+      function pointMat() {
+        return new THREE.ShaderMaterial({
+          uniforms: { pr: { value: PR }, uNear: { value: NEAR }, uFar: { value: FAR } },
+          vertexShader: 'attribute vec3 aColor; attribute float aSize; attribute float aAlpha; uniform float pr, uNear, uFar; varying vec3 vC; varying float vA;' +
+            'void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); float d = -mv.z; ' + depth +
+            ' vA = (0.1 + 0.9 * k) * aAlpha; vC = aColor; gl_PointSize = aSize * pr * (22.0 / d) * (0.7 + 0.5 * k); gl_Position = projectionMatrix * mv; }',
+          fragmentShader: 'varying vec3 vC; varying float vA; void main(){ float r = length(gl_PointCoord - 0.5) * 2.0; if (r > 1.0) discard; gl_FragColor = vec4(vC, pow(1.0 - r, 1.4) * vA); }',
+          transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+        });
+      }
+      function makePoints(pos, col, size, alpha) {
+        var g = new THREE.BufferGeometry();
+        g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        g.setAttribute('aColor', new THREE.BufferAttribute(col, 3));
+        g.setAttribute('aSize', new THREE.BufferAttribute(size, 1));
+        g.setAttribute('aAlpha', new THREE.BufferAttribute(alpha, 1));
+        var o = new THREE.Points(g, pointMat()); o.frustumCulled = false; return o;
+      }
+
+      var N = 380, golden = Math.PI * (3 - Math.sqrt(5)), unit = [];
+      var dp = new Float32Array(N * 3), dc = new Float32Array(N * 3), ds = new Float32Array(N), da = new Float32Array(N);
+      for (var i = 0; i < N; i++) {
+        var y = 1 - (i / (N - 1)) * 2, rad = Math.sqrt(1 - y * y), th = golden * i;
+        var u = [Math.cos(th) * rad, y, Math.sin(th) * rad]; unit.push(u);
+        dp[i * 3] = u[0] * R; dp[i * 3 + 1] = u[1] * R; dp[i * 3 + 2] = u[2] * R;
+        dc[i * 3] = 0.3; dc[i * 3 + 1] = 0.55; dc[i * 3 + 2] = 1.0; ds[i] = 1.0 + Math.random() * 0.5; da[i] = 0.6;
+      }
+      globe.add(makePoints(dp, dc, ds, da));
+
+      var H = 8, hubs = [];
+      for (var h = 0; h < H; h++) hubs.push(unit[Math.floor(((h + 0.5) / H) * N)]);
+      var hp = new Float32Array(H * 6), hc = new Float32Array(H * 6), hs = new Float32Array(H * 2), ha = new Float32Array(H * 2);
+      for (var h2 = 0; h2 < H; h2++) for (var q = 0; q < 2; q++) {
+        var o = h2 * 2 + q, cy = h2 % 3 === 0;
+        hp[o * 3] = hubs[h2][0] * R; hp[o * 3 + 1] = hubs[h2][1] * R; hp[o * 3 + 2] = hubs[h2][2] * R;
+        hc[o * 3] = cy ? 0.13 : 0.55; hc[o * 3 + 1] = cy ? 0.83 : 0.75; hc[o * 3 + 2] = cy ? 0.93 : 1.0;
+        hs[o] = q === 0 ? 3.6 : 11; ha[o] = q === 0 ? 1 : 0.25;
+      }
+      globe.add(makePoints(hp, hc, hs, ha));
+
+      var S = 32, arcs = [];
+      function slerp(a, b, t, om) {
+        var s1 = Math.sin((1 - t) * om) / Math.sin(om), s2 = Math.sin(t * om) / Math.sin(om);
+        return [a[0] * s1 + b[0] * s2, a[1] * s1 + b[1] * s2, a[2] * s1 + b[2] * s2];
+      }
+      [2, 3].forEach(function (step) {
+        for (var a = 0; a < H; a++) {
+          var A = hubs[a], B = hubs[(a + step) % H];
+          var om = Math.acos(Math.max(-1, Math.min(1, A[0] * B[0] + A[1] * B[1] + A[2] * B[2])));
+          if (om < 0.5 || om > 3.0) continue;
+          var pts = new Float32Array((S + 1) * 3), lift = 0.1 + 0.25 * (om / Math.PI);
+          for (var t = 0; t <= S; t++) {
+            var f = t / S, pnt = slerp(A, B, f, om), r = R * (1 + lift * Math.sin(Math.PI * f));
+            pts[t * 3] = pnt[0] * r; pts[t * 3 + 1] = pnt[1] * r; pts[t * 3 + 2] = pnt[2] * r;
+          }
+          arcs.push(pts);
+        }
+      });
+      var AL = arcs.length, lp = new Float32Array(AL * S * 6), lt = new Float32Array(AL * S * 2);
+      arcs.forEach(function (pts, ai) {
+        for (var t = 0; t < S; t++) {
+          var b = (ai * S + t) * 6;
+          for (var c = 0; c < 3; c++) { lp[b + c] = pts[t * 3 + c]; lp[b + 3 + c] = pts[(t + 1) * 3 + c]; }
+          lt[(ai * S + t) * 2] = t / S; lt[(ai * S + t) * 2 + 1] = (t + 1) / S;
+        }
+      });
+      var lg = new THREE.BufferGeometry();
+      lg.setAttribute('position', new THREE.BufferAttribute(lp, 3));
+      lg.setAttribute('aT', new THREE.BufferAttribute(lt, 1));
+      var lm = new THREE.ShaderMaterial({
+        uniforms: { uNear: { value: NEAR }, uFar: { value: FAR }, uColor: { value: new THREE.Color(0x60a5fa) } },
+        vertexShader: 'attribute float aT; uniform float uNear, uFar; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); float d = -mv.z; ' + depth +
+          ' vA = (0.06 + 0.94 * k) * 0.8 * (0.3 + 0.7 * sin(3.14159 * aT)); gl_Position = projectionMatrix * mv; }',
+        fragmentShader: 'uniform vec3 uColor; varying float vA; void main(){ gl_FragColor = vec4(uColor, vA); }',
+        transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+      });
+      var lines = new THREE.LineSegments(lg, lm); lines.frustumCulled = false; globe.add(lines);
+
+      var TR = 3, tSize = [4.5, 3.2, 2.2], tAlpha = [1, 0.55, 0.25];
+      var PN = AL * TR, pp = new Float32Array(PN * 3), pc = new Float32Array(PN * 3), ps = new Float32Array(PN), pa = new Float32Array(PN);
+      var speed = [], offset = [];
+      for (var a2 = 0; a2 < AL; a2++) {
+        speed.push(0.1 + Math.random() * 0.1); offset.push(Math.random());
+        for (var k2 = 0; k2 < TR; k2++) {
+          var ix = a2 * TR + k2;
+          pc[ix * 3] = 0.75; pc[ix * 3 + 1] = 0.95; pc[ix * 3 + 2] = 1.0; ps[ix] = tSize[k2]; pa[ix] = tAlpha[k2];
+        }
+      }
+      var pulses = makePoints(pp, pc, ps, pa); globe.add(pulses);
+
+      function update(t) {
+        var arr = pulses.geometry.attributes.position.array;
+        for (var a = 0; a < AL; a++) {
+          var pts = arcs[a], head = (t * speed[a] + offset[a]) % 1;
+          for (var k = 0; k < TR; k++) {
+            var tt = Math.max(0, head - k * 0.03) * S, i0 = Math.min(S - 1, Math.floor(tt)), f = tt - i0, o = (a * TR + k) * 3;
+            for (var c = 0; c < 3; c++) arr[o + c] = pts[i0 * 3 + c] + (pts[(i0 + 1) * 3 + c] - pts[i0 * 3 + c]) * f;
+          }
+        }
+        pulses.geometry.attributes.position.needsUpdate = true;
+        globe.rotation.y = t * 0.22;
+        renderer.render(scene, camera);
+      }
+      var t = 0, last = 0, running = false;
+      function frame(now) {
+        if (!running) return;
+        t += Math.min((now - last) / 1000, 0.1); last = now;
+        update(t); requestAnimationFrame(frame);
+      }
+      function start() { if (running) return; running = true; last = performance.now(); requestAnimationFrame(frame); }
+      window.addEventListener('resize', function () {
+        if (!canvas.clientWidth || !canvas.clientHeight) return;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight; camera.updateProjectionMatrix();
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight, false); update(t);
+      });
+      update(0);
+      if (reduce) return;
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (e) { if (e[0].isIntersecting) start(); else running = false; }).observe(canvas);
+      } else { start(); }
     })();
   </script>
 
