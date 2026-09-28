@@ -138,26 +138,28 @@
     })();
   </script>
 
-  <section class="relative py-20 md:py-28 bg-white border-b border-slate-200 overflow-hidden">
-    <div class="hidden md:block absolute inset-y-0 right-0 w-1/2 lg:w-2/5 pointer-events-none opacity-60 lg:opacity-100" aria-hidden="true">
+  <section class="relative py-20 md:py-28 bg-[#0B0F19] border-b border-slate-800 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,#1e293b40_1px,transparent_1px),linear-gradient(to_bottom,#1e293b40_1px,transparent_1px)] bg-[size:4rem_4rem]" aria-hidden="true"></div>
+    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(55% 75% at 78% 50%, rgba(37,99,235,0.28), transparent 70%)" aria-hidden="true"></div>
+    <div class="hidden md:block absolute inset-y-0 right-0 w-1/2 pointer-events-none" aria-hidden="true">
       <canvas id="heroNodeCanvas" class="w-full h-full"></canvas>
     </div>
     <div class="max-w-7xl mx-auto px-6 relative z-10">
-      <div class="max-w-3xl">
-        <div class="inline-flex items-center space-x-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5 text-xs font-semibold text-blue-700 mb-6">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-400/30 rounded-full px-4 py-1.5 text-xs font-semibold text-blue-300 mb-6">
           <span>Enterprise Systems Advisory</span>
         </div>
-        <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
+        <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6">
           Enterprise Systems Consulting for Companies Outgrowing Their Setup
         </h1>
-        <p class="text-lg sm:text-xl text-slate-600 leading-relaxed mb-8">
+        <p class="text-lg sm:text-xl text-slate-300 leading-relaxed mb-8">
           We fix the CRM, billing, and integration problems that quietly show up as your company grows — pricing and approval logic that stops working, support cases falling through the cracks, systems that fall out of sync, and audits that turn into scrambles. Built by senior architects, not a generalist agency.
         </p>
         <div class="flex flex-col sm:flex-row gap-4">
-          <a href="/contact" class="bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold px-6 py-3.5 rounded-lg transition duration-200 shadow-md shadow-blue-600/10">
+          <a href="/contact" class="bg-blue-600 hover:bg-blue-500 text-white text-center font-semibold px-6 py-3.5 rounded-lg transition duration-200 shadow-lg shadow-blue-600/30">
             Get a Health Check
           </a>
-          <a href="#about" class="border border-slate-300 hover:bg-slate-100 bg-white text-slate-700 text-center font-semibold px-6 py-3.5 rounded-lg transition duration-200">
+          <a href="#about" class="border border-slate-600 hover:bg-slate-800 bg-transparent text-slate-200 text-center font-semibold px-6 py-3.5 rounded-lg transition duration-200">
             See How We Work
           </a>
         </div>
@@ -524,146 +526,203 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    // A globe of connected systems that periodically breaks apart, drifts, and wires itself back together.
+    // Glowing data globe: depth-faded dots, arcs between hub systems, light pulses travelling along them.
     (function () {
       var canvas = document.getElementById('heroNodeCanvas');
       if (!canvas || !window.THREE || !canvas.clientWidth || !canvas.clientHeight) return;
-
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       var renderer;
       try {
         renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-      } catch (e) {
-        return; // No WebGL: leave the space quietly empty.
-      }
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      } catch (e) { return; }
+      var PR = Math.min(window.devicePixelRatio || 1, 2);
+      renderer.setPixelRatio(PR);
       renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+      renderer.setClearColor(0x000000, 0);
 
       var scene = new THREE.Scene();
-      var camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
-      camera.position.z = 18;
+      var CAM = 22, R = 5, NEAR = CAM - R, FAR = CAM + R;
+      var camera = new THREE.PerspectiveCamera(40, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+      camera.position.z = CAM;
+
       var globe = new THREE.Group();
-      globe.rotation.x = 0.35;
       scene.add(globe);
 
-      // Nodes evenly spread over a sphere (Fibonacci lattice)
-      var N = 90, R = 4.8;
-      var golden = Math.PI * (3 - Math.sqrt(5));
-      var home = [], away = [], stagger = [], phase = [], base = [];
-      var palette = [[0.145, 0.388, 0.922], [0.376, 0.647, 0.980], [0.114, 0.306, 0.847]]; // brand blues
-      var pale = [0.749, 0.859, 0.996];
+      // Soft atmospheric glow behind the globe
+      var gc = document.createElement('canvas'); gc.width = gc.height = 256;
+      var gx = gc.getContext('2d'), gr = gx.createRadialGradient(128, 128, 20, 128, 128, 128);
+      gr.addColorStop(0, 'rgba(59,130,246,0.55)'); gr.addColorStop(0.45, 'rgba(37,99,235,0.18)'); gr.addColorStop(1, 'rgba(37,99,235,0)');
+      gx.fillStyle = gr; gx.fillRect(0, 0, 256, 256);
+      var glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(gc), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false }));
+      glow.scale.set(19, 19, 1); glow.position.z = -3;
+      scene.add(glow);
+
+      // Faint body so the globe reads as a solid volume
+      var body = new THREE.Mesh(new THREE.SphereGeometry(R * 0.985, 48, 32),
+        new THREE.MeshBasicMaterial({ color: 0x0a1330, transparent: true, opacity: 0.6, depthWrite: false }));
+      body.renderOrder = -1;
+      globe.add(body);
+
+      // Shared depth-fade: nearer to camera = brighter and bigger
+      var depthGLSL = 'float k = clamp(1.0 - (d - uNear) / (uFar - uNear), 0.0, 1.0);';
+      function pointMat() {
+        return new THREE.ShaderMaterial({
+          uniforms: { pr: { value: PR }, uNear: { value: NEAR }, uFar: { value: FAR } },
+          vertexShader: 'attribute vec3 aColor; attribute float aSize; attribute float aAlpha; uniform float pr, uNear, uFar; varying vec3 vC; varying float vA;' +
+            'void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); float d = -mv.z; ' + depthGLSL +
+            ' vA = (0.1 + 0.9 * k) * aAlpha; vC = aColor; gl_PointSize = aSize * pr * (22.0 / d) * (0.7 + 0.5 * k); gl_Position = projectionMatrix * mv; }',
+          fragmentShader: 'varying vec3 vC; varying float vA; void main(){ float r = length(gl_PointCoord - 0.5) * 2.0; if (r > 1.0) discard; gl_FragColor = vec4(vC, pow(1.0 - r, 1.5) * vA); }',
+          transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+        });
+      }
+      function lineMat(color, op) {
+        return new THREE.ShaderMaterial({
+          uniforms: { uNear: { value: NEAR }, uFar: { value: FAR }, uColor: { value: new THREE.Color(color) }, uOp: { value: op } },
+          vertexShader: 'attribute float aT; uniform float uNear, uFar, uOp; varying float vA;' +
+            'void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); float d = -mv.z; ' + depthGLSL +
+            ' vA = (0.06 + 0.94 * k) * uOp * (0.3 + 0.7 * sin(3.14159 * aT)); gl_Position = projectionMatrix * mv; }',
+          fragmentShader: 'uniform vec3 uColor; varying float vA; void main(){ gl_FragColor = vec4(uColor, vA); }',
+          transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+        });
+      }
+      function makePoints(pos, col, size, alpha) {
+        var g = new THREE.BufferGeometry();
+        g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        g.setAttribute('aColor', new THREE.BufferAttribute(col, 3));
+        g.setAttribute('aSize', new THREE.BufferAttribute(size, 1));
+        g.setAttribute('aAlpha', new THREE.BufferAttribute(alpha, 1));
+        var o = new THREE.Points(g, pointMat());
+        o.frustumCulled = false;
+        return o;
+      }
+
+      // Surface dots (Fibonacci lattice)
+      var N = 900, golden = Math.PI * (3 - Math.sqrt(5));
+      var dp = new Float32Array(N * 3), dc = new Float32Array(N * 3), ds = new Float32Array(N), da = new Float32Array(N);
+      var unit = [];
       for (var i = 0; i < N; i++) {
-        var y = 1 - (i / (N - 1)) * 2;
-        var rad = Math.sqrt(1 - y * y);
-        var th = golden * i;
-        var hx = Math.cos(th) * rad * R, hy = y * R, hz = Math.sin(th) * rad * R;
-        home.push([hx, hy, hz]);
-        var k = R * (1.1 + Math.random() * 0.25) / R;
-        away.push([
-          hx * k + (Math.random() - 0.5) * 1.6,
-          hy * k + (Math.random() - 0.5) * 1.6,
-          hz * k + (Math.random() - 0.5) * 1.6
-        ]);
-        stagger.push(Math.random());
-        phase.push(Math.random() * Math.PI * 2);
-        base.push(palette[i % 3]);
+        var y = 1 - (i / (N - 1)) * 2, rad = Math.sqrt(1 - y * y), th = golden * i;
+        var ux = Math.cos(th) * rad, uy = y, uz = Math.sin(th) * rad;
+        unit.push([ux, uy, uz]);
+        dp[i * 3] = ux * R; dp[i * 3 + 1] = uy * R; dp[i * 3 + 2] = uz * R;
+        var v = 0.75 + Math.random() * 0.25;
+        dc[i * 3] = 0.30 * v; dc[i * 3 + 1] = 0.55 * v; dc[i * 3 + 2] = 1.0 * v;
+        ds[i] = 1.4 + Math.random() * 1.2; da[i] = 0.55;
       }
+      globe.add(makePoints(dp, dc, ds, da));
 
-      // Connections: each node to its 3 nearest neighbours on the globe
-      var edges = [], seen = {};
-      function dist(a, b) {
-        var dx = a[0] - b[0], dy = a[1] - b[1], dz = a[2] - b[2];
-        return Math.sqrt(dx * dx + dy * dy + dz * dz);
-      }
-      for (var a = 0; a < N; a++) {
-        var d = [];
-        for (var b = 0; b < N; b++) if (a !== b) d.push({ k: b, v: dist(home[a], home[b]) });
-        d.sort(function (p, q) { return p.v - q.v; });
-        for (var n = 0; n < 3; n++) {
-          var kk = d[n].k, key = a < kk ? a + '-' + kk : kk + '-' + a;
-          if (!seen[key]) { seen[key] = 1; edges.push([a, kk]); }
+      // Hub systems: bright nodes with a soft halo
+      var H = 12, hubs = [];
+      for (var h = 0; h < H; h++) hubs.push(unit[Math.floor(((h + 0.5) / H) * N)]);
+      var hp = new Float32Array(H * 6), hc = new Float32Array(H * 6), hs = new Float32Array(H * 2), ha = new Float32Array(H * 2);
+      for (var h2 = 0; h2 < H; h2++) {
+        for (var q = 0; q < 2; q++) {
+          var o = (h2 * 2 + q);
+          hp[o * 3] = hubs[h2][0] * R; hp[o * 3 + 1] = hubs[h2][1] * R; hp[o * 3 + 2] = hubs[h2][2] * R;
+          var cy = h2 % 3 === 0;
+          hc[o * 3] = cy ? 0.13 : 0.55; hc[o * 3 + 1] = cy ? 0.83 : 0.75; hc[o * 3 + 2] = cy ? 0.93 : 1.0;
+          hs[o] = q === 0 ? 8 : 26; ha[o] = q === 0 ? 1 : 0.22;
         }
       }
-      var E = edges.length;
+      globe.add(makePoints(hp, hc, hs, ha));
 
-      // Geometry buffers (rewritten every frame)
-      var pPos = new Float32Array(N * 3), pCol = new Float32Array(N * 3);
-      var ptsGeo = new THREE.BufferGeometry();
-      ptsGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-      ptsGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
-
-      var dot = document.createElement('canvas');
-      dot.width = dot.height = 64;
-      var g = dot.getContext('2d');
-      g.beginPath(); g.arc(32, 32, 30, 0, Math.PI * 2); g.fillStyle = '#ffffff'; g.fill();
-      var ptsMat = new THREE.PointsMaterial({
-        size: 0.34, map: new THREE.CanvasTexture(dot), vertexColors: true,
-        transparent: true, alphaTest: 0.5, sizeAttenuation: true
+      // Arcs between hubs, lifted off the surface
+      var S = 40, arcs = [];
+      function slerp(a, b, t, om) {
+        var s1 = Math.sin((1 - t) * om) / Math.sin(om), s2 = Math.sin(t * om) / Math.sin(om);
+        return [a[0] * s1 + b[0] * s2, a[1] * s1 + b[1] * s2, a[2] * s1 + b[2] * s2];
+      }
+      [3, 5].forEach(function (step) {
+        for (var a = 0; a < H; a++) {
+          var A = hubs[a], B = hubs[(a + step) % H];
+          var dot = Math.max(-1, Math.min(1, A[0] * B[0] + A[1] * B[1] + A[2] * B[2]));
+          var om = Math.acos(dot);
+          if (om < 0.5 || om > 3.0) continue;
+          var pts = new Float32Array((S + 1) * 3), lift = 0.1 + 0.28 * (om / Math.PI);
+          for (var t = 0; t <= S; t++) {
+            var f = t / S, p = slerp(A, B, f, om), r = R * (1 + lift * Math.sin(Math.PI * f));
+            pts[t * 3] = p[0] * r; pts[t * 3 + 1] = p[1] * r; pts[t * 3 + 2] = p[2] * r;
+          }
+          arcs.push(pts);
+        }
       });
-      var points = new THREE.Points(ptsGeo, ptsMat);
-      points.frustumCulled = false;
-      globe.add(points);
-
-      var lPos = new Float32Array(E * 6), lCol = new Float32Array(E * 6);
-      var lineGeo = new THREE.BufferGeometry();
-      lineGeo.setAttribute('position', new THREE.BufferAttribute(lPos, 3));
-      lineGeo.setAttribute('color', new THREE.BufferAttribute(lCol, 3));
-      var lines = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({ vertexColors: true }));
-      lines.frustumCulled = false;
-      globe.add(lines);
-
-      var edgeBlue = [0.231, 0.510, 0.965]; // fades to white (the hero background) when disconnected
-
-      function ease(x) { return x * x * (3 - 2 * x); }
-      function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
-
-      // 1 = globe fully assembled, 0 = fully scattered
-      var CYCLE = 14;
-      function assembly(t) {
-        var s = t % CYCLE;
-        if (s < 6) return 1;                    // hold as a globe
-        if (s < 8) return 1 - ease((s - 6) / 2); // break apart
-        if (s < 9) return 0;                    // drift
-        if (s < 12.5) return ease((s - 9) / 3.5); // wire back up
-        return 1;
-      }
-
-      var prog = new Float32Array(N);
-      function update(t) {
-        var A = assembly(t);
-        for (var i = 0; i < N; i++) {
-          var p = clamp(A * 1.5 - stagger[i] * 0.5);
-          prog[i] = p;
-          var e = ease(p), free = 1 - p;
-          var dx = Math.sin(t * 0.7 + phase[i]) * 0.35 * free;
-          var dy = Math.cos(t * 0.6 + phase[i] * 1.3) * 0.35 * free;
-          var dz = Math.sin(t * 0.5 + phase[i] * 0.7) * 0.35 * free;
-          pPos[i * 3]     = away[i][0] + (home[i][0] - away[i][0]) * e + dx;
-          pPos[i * 3 + 1] = away[i][1] + (home[i][1] - away[i][1]) * e + dy;
-          pPos[i * 3 + 2] = away[i][2] + (home[i][2] - away[i][2]) * e + dz;
-          var m = free * 0.65;
-          pCol[i * 3]     = base[i][0] + (pale[0] - base[i][0]) * m;
-          pCol[i * 3 + 1] = base[i][1] + (pale[1] - base[i][1]) * m;
-          pCol[i * 3 + 2] = base[i][2] + (pale[2] - base[i][2]) * m;
+      var AL = arcs.length;
+      var lp = new Float32Array(AL * S * 6), lt = new Float32Array(AL * S * 2);
+      arcs.forEach(function (pts, ai) {
+        for (var t = 0; t < S; t++) {
+          var base = (ai * S + t) * 6;
+          for (var c = 0; c < 3; c++) { lp[base + c] = pts[t * 3 + c]; lp[base + 3 + c] = pts[(t + 1) * 3 + c]; }
+          lt[(ai * S + t) * 2] = t / S; lt[(ai * S + t) * 2 + 1] = (t + 1) / S;
         }
-        for (var j = 0; j < E; j++) {
-          var ia = edges[j][0], ib = edges[j][1];
-          var w = Math.min(prog[ia], prog[ib]);
-          w = w * w * w;
-          for (var c = 0; c < 3; c++) {
-            lPos[j * 6 + c]     = pPos[ia * 3 + c];
-            lPos[j * 6 + 3 + c] = pPos[ib * 3 + c];
-            var col = 1 + (edgeBlue[c] - 1) * w;
-            lCol[j * 6 + c] = col;
-            lCol[j * 6 + 3 + c] = col;
+      });
+      var lg = new THREE.BufferGeometry();
+      lg.setAttribute('position', new THREE.BufferAttribute(lp, 3));
+      lg.setAttribute('aT', new THREE.BufferAttribute(lt, 1));
+      var arcLines = new THREE.LineSegments(lg, lineMat(0x60a5fa, 0.75));
+      arcLines.frustumCulled = false;
+      globe.add(arcLines);
+
+      // Light pulses travelling along the arcs (head + fading trail)
+      var TR = 4, trailSize = [9, 6.5, 4.5, 3], trailAlpha = [1, 0.6, 0.35, 0.18];
+      var PN = AL * TR, pp = new Float32Array(PN * 3), pc = new Float32Array(PN * 3), ps = new Float32Array(PN), pa = new Float32Array(PN);
+      var speed = [], offset = [];
+      for (var a2 = 0; a2 < AL; a2++) {
+        speed.push(0.09 + Math.random() * 0.1); offset.push(Math.random());
+        for (var k2 = 0; k2 < TR; k2++) {
+          var idx = a2 * TR + k2;
+          pc[idx * 3] = 0.75; pc[idx * 3 + 1] = 0.95; pc[idx * 3 + 2] = 1.0;
+          ps[idx] = trailSize[k2]; pa[idx] = trailAlpha[k2];
+        }
+      }
+      var pulses = makePoints(pp, pc, ps, pa);
+      globe.add(pulses);
+
+      // Orbit rings with a travelling node
+      var rings = [];
+      function addRing(radius, tx, tz, spin) {
+        var tilt = new THREE.Group(); tilt.rotation.x = tx; tilt.rotation.z = tz;
+        var spinG = new THREE.Group();
+        var seg = 128, rp = new Float32Array(seg * 3), rt = new Float32Array(seg);
+        for (var i = 0; i < seg; i++) {
+          var an = (i / seg) * Math.PI * 2;
+          rp[i * 3] = Math.cos(an) * radius; rp[i * 3 + 2] = Math.sin(an) * radius; rt[i] = 0.5;
+        }
+        var rg = new THREE.BufferGeometry();
+        rg.setAttribute('position', new THREE.BufferAttribute(rp, 3));
+        rg.setAttribute('aT', new THREE.BufferAttribute(rt, 1));
+        var loop = new THREE.LineLoop(rg, lineMat(0x3b82f6, 0.32));
+        loop.frustumCulled = false;
+        spinG.add(loop);
+        var nd = makePoints(new Float32Array([radius, 0, 0, -radius, 0, 0]), new Float32Array([0.55, 0.85, 1, 0.55, 0.85, 1]), new Float32Array([9, 9]), new Float32Array([1, 1]));
+        spinG.add(nd);
+        tilt.add(spinG); globe.add(tilt);
+        rings.push({ g: spinG, s: spin });
+      }
+      addRing(R * 1.3, 1.15, 0.25, 0.35);
+      addRing(R * 1.5, -0.55, -0.6, -0.22);
+
+      // Mouse parallax
+      var mx = 0, my = 0, tmx = 0, tmy = 0;
+      window.addEventListener('mousemove', function (e) {
+        tmx = (e.clientX / window.innerWidth) * 2 - 1;
+        tmy = (e.clientY / window.innerHeight) * 2 - 1;
+      });
+
+      function update(t) {
+        mx += (tmx - mx) * 0.05; my += (tmy - my) * 0.05;
+        var pa2 = pulses.geometry.attributes.position.array;
+        for (var a = 0; a < AL; a++) {
+          var pts = arcs[a], head = (t * speed[a] + offset[a]) % 1;
+          for (var k = 0; k < TR; k++) {
+            var tt = Math.max(0, head - k * 0.018) * S, i0 = Math.min(S - 1, Math.floor(tt)), f = tt - i0, o = (a * TR + k) * 3;
+            for (var c = 0; c < 3; c++) pa2[o + c] = pts[i0 * 3 + c] + (pts[(i0 + 1) * 3 + c] - pts[i0 * 3 + c]) * f;
           }
         }
-        ptsGeo.attributes.position.needsUpdate = true;
-        ptsGeo.attributes.color.needsUpdate = true;
-        lineGeo.attributes.position.needsUpdate = true;
-        lineGeo.attributes.color.needsUpdate = true;
-        globe.rotation.y = t * 0.15;
+        pulses.geometry.attributes.position.needsUpdate = true;
+        for (var r = 0; r < rings.length; r++) rings[r].g.rotation.y = t * rings[r].s;
+        globe.rotation.y = t * 0.12 + mx * 0.4;
+        globe.rotation.x = 0.3 + my * 0.2;
         renderer.render(scene, camera);
       }
 
@@ -677,11 +736,9 @@
       }
       function start() {
         if (running) return;
-        running = true;
-        last = performance.now();
+        running = true; last = performance.now();
         requestAnimationFrame(frame);
       }
-
       function resize() {
         if (!canvas.clientWidth || !canvas.clientHeight) return;
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -691,16 +748,13 @@
       }
       window.addEventListener('resize', resize);
 
-      update(0);                 // first frame: fully assembled globe
-      if (reduceMotion) return;  // static globe only
-
+      update(0);
+      if (reduceMotion) return;
       if ('IntersectionObserver' in window) {
         new IntersectionObserver(function (entries) {
           if (entries[0].isIntersecting) start(); else running = false;
         }).observe(canvas);
-      } else {
-        start();
-      }
+      } else { start(); }
     })();
   </script>
 
