@@ -38,6 +38,31 @@
     .animate-marquee-right:hover {
       animation-play-state: paused;
     }
+
+    /* 3D tilt cards */
+    .tilt-card { position: relative; transform-style: preserve-3d; will-change: transform; }
+    .tilt-card.tilt-card { transition: transform .18s ease-out, box-shadow .3s ease, border-color .3s ease; }
+    .tilt-card::before, .tilt-card::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit;
+      pointer-events: none; opacity: 0; transition: opacity .3s ease;
+    }
+    .tilt-card::before { background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,.13), transparent 65%); }
+    .tilt-card::after {
+      padding: 1.5px;
+      background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), #3b82f6, #22d3ee 45%, transparent 75%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    }
+    .tilt-card.is-hover { box-shadow: 0 24px 44px -14px rgba(37,99,235,.35); }
+    .tilt-card.is-hover::before, .tilt-card.is-hover::after { opacity: 1; }
+    .tilt-pop { transition: transform .25s ease; }
+    .tilt-card.is-hover .tilt-pop { transform: translateZ(34px); }
+    .tilt-card.pre { opacity: 0; }
+    .tilt-card.in { animation: cardRise .7s cubic-bezier(.2,.7,.2,1) var(--d, 0s) backwards; }
+    @keyframes cardRise {
+      from { opacity: 0; transform: perspective(900px) translateY(34px) rotateX(12deg); }
+    }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white">
@@ -235,33 +260,33 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:border-blue-400 transition">
-          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">01</div>
+        <div class="tilt-card bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
+          <div class="tilt-pop w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">01</div>
           <h3 class="text-xl font-semibold text-slate-900 mb-3">CRM Setup & Automation</h3>
           <p class="text-slate-600 text-sm leading-relaxed">We set up and maintain the day-to-day engine of your CRM environment — including Salesforce — covering system optimization, custom object schema design, and declarative administration.</p>
         </div>
-        <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:border-blue-400 transition">
-          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">02</div>
+        <div class="tilt-card bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
+          <div class="tilt-pop w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">02</div>
           <h3 class="text-xl font-semibold text-slate-900 mb-3">Customer Service & Case Management</h3>
           <p class="text-slate-600 text-sm leading-relaxed">We configure Email-to-Case, Omni-Channel routing, and case assignment rules in Salesforce Service Cloud, and set up Zendesk for teams that run support there, so requests reach the right team without manual triage.</p>
         </div>
-        <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:border-blue-400 transition">
-          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">03</div>
+        <div class="tilt-card bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
+          <div class="tilt-pop w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">03</div>
           <h3 class="text-xl font-semibold text-slate-900 mb-3">Revenue Operations</h3>
           <p class="text-slate-600 text-sm leading-relaxed">We set up product catalogs, pricing logic, and Quote-to-Cash processes across the platforms you run revenue through — including Salesforce CPQ and Zuora.</p>
         </div>
-        <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:border-blue-400 transition">
-          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">04</div>
+        <div class="tilt-card bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
+          <div class="tilt-pop w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">04</div>
           <h3 class="text-xl font-semibold text-slate-900 mb-3">Custom API & Webhook Pipelines</h3>
           <p class="text-slate-600 text-sm leading-relaxed">Connecting web portals and banking frontends directly to CRM backends using Boomi, secure Webhooks, and REST APIs.</p>
         </div>
-        <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:border-blue-400 transition">
-          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">05</div>
+        <div class="tilt-card bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
+          <div class="tilt-pop w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">05</div>
           <h3 class="text-xl font-semibold text-slate-900 mb-3">ITGC & System Governance</h3>
           <p class="text-slate-600 text-sm leading-relaxed">IT General Controls compliance and audit readiness, applied consistently across Salesforce, Zuora, and other CRM platforms.</p>
         </div>
-        <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:border-blue-400 transition">
-          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">06</div>
+        <div class="tilt-card bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
+          <div class="tilt-pop w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-lg mb-6 border border-blue-100">06</div>
           <h3 class="text-xl font-semibold text-slate-900 mb-3">Contract & Order Form Automation</h3>
           <p class="text-slate-600 text-sm leading-relaxed">Order form and contract generation and workflow automation with Conga and Ironclad, tied to your quoting and approval process.</p>
         </div>
@@ -405,7 +430,7 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="bg-white border border-slate-200 p-8 rounded-2xl flex flex-col justify-between shadow-sm">
+        <div class="tilt-card bg-white border border-slate-200 p-8 rounded-2xl flex flex-col justify-between shadow-sm">
           <div>
             <h3 class="text-xl font-bold text-slate-900 mb-2">Systems Audit</h3>
             <p class="text-slate-500 text-xs mb-6">Comprehensive review of your current Salesforce org, security controls, and technical debt.</p>
@@ -418,7 +443,7 @@
           </div>
           <a href="/contact" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-center font-semibold py-3 rounded-lg transition border border-slate-300">Request Audit</a>
         </div>
-        <div class="bg-white border-2 border-blue-600 p-8 rounded-2xl flex flex-col justify-between relative shadow-md">
+        <div class="tilt-card bg-white border-2 border-blue-600 p-8 rounded-2xl flex flex-col justify-between relative shadow-md">
           <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Most Popular</div>
           <div>
             <h3 class="text-xl font-bold text-slate-900 mb-2">Integration Sprint</h3>
@@ -432,7 +457,7 @@
           </div>
           <a href="/contact" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold py-3 rounded-lg transition">Start Project</a>
         </div>
-        <div class="bg-white border border-slate-200 p-8 rounded-2xl flex flex-col justify-between shadow-sm">
+        <div class="tilt-card bg-white border border-slate-200 p-8 rounded-2xl flex flex-col justify-between shadow-sm">
           <div>
             <h3 class="text-xl font-bold text-slate-900 mb-2">Managed Partner</h3>
             <p class="text-slate-500 text-xs mb-6">Ongoing senior architectural oversight, maintenance, and strategic revenue and service operations support.</p>
@@ -755,6 +780,49 @@
           if (entries[0].isIntersecting) start(); else running = false;
         }).observe(canvas);
       } else { start(); }
+    })();
+  </script>
+
+  <script>
+    // 3D tilt + scroll-in for cards
+    (function () {
+      var cards = document.querySelectorAll('.tilt-card');
+      if (!cards.length) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var canHover = window.matchMedia('(hover: hover)').matches;
+
+      cards.forEach(function (el, i) { el.style.setProperty('--d', (i % 3) * 0.09 + 's'); });
+
+      if (!reduce && 'IntersectionObserver' in window) {
+        cards.forEach(function (el) { el.classList.add('pre'); });
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            en.target.classList.remove('pre');
+            en.target.classList.add('in');
+            io.unobserve(en.target);
+          });
+        }, { threshold: 0.15 });
+        cards.forEach(function (el) { io.observe(el); });
+      }
+
+      if (reduce || !canHover) return;
+      cards.forEach(function (el) {
+        el.addEventListener('pointermove', function (e) {
+          if (e.pointerType !== 'mouse') return;
+          var r = el.getBoundingClientRect();
+          var x = e.clientX - r.left, y = e.clientY - r.top;
+          var ry = (x / r.width - 0.5) * 14, rx = (0.5 - y / r.height) * 14;
+          el.style.setProperty('--mx', x + 'px');
+          el.style.setProperty('--my', y + 'px');
+          el.style.transform = 'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateY(-4px)';
+          el.classList.add('is-hover');
+        });
+        el.addEventListener('pointerleave', function () {
+          el.style.transform = '';
+          el.classList.remove('is-hover');
+        });
+      });
     })();
   </script>
 
