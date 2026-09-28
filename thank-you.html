@@ -12,6 +12,23 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="assets/site.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="robots" content="noindex">
+  <style>
+    @keyframes tyPop { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes tyDraw { to { stroke-dashoffset: 0; } }
+    @keyframes tyRing { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(1.9); opacity: 0; } }
+    @keyframes tyRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+    .ty-badge { animation: tyPop .6s cubic-bezier(.2,.9,.3,1.2) both; }
+    .ty-check { stroke-dasharray: 1; stroke-dashoffset: 1; animation: tyDraw .5s ease .45s forwards; }
+    .ty-ring { animation: tyRing 2.4s ease-out infinite; }
+    .ty-ring.b { animation-delay: 1.2s; }
+    .ty-rise { animation: tyRise .7s ease both; animation-delay: var(--d, 0s); }
+    @media (prefers-reduced-motion: reduce) {
+      .ty-badge, .ty-rise { animation: none; }
+      .ty-ring { animation: none; opacity: 0; }
+      .ty-check { animation: none; stroke-dashoffset: 0; }
+    }
+  </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white min-h-screen flex flex-col justify-between">
 
@@ -82,22 +99,56 @@
   </script>
   <script src="assets/logo-animation.js"></script>
 
-  <main class="flex-grow flex items-center justify-center py-20 px-6">
-    <div class="max-w-lg w-full bg-white border border-slate-200 rounded-2xl shadow-sm p-10 text-center">
-      <div class="w-16 h-16 bg-blue-50 border border-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-        <svg class="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
+  <main class="relative flex-grow flex items-center justify-center py-20 px-6 bg-[#0B0F19] overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,#1e293b40_1px,transparent_1px),linear-gradient(to_bottom,#1e293b40_1px,transparent_1px)] bg-[size:4rem_4rem]" aria-hidden="true"></div>
+    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(45% 55% at 50% 35%, rgba(37,99,235,0.30), transparent 70%)" aria-hidden="true"></div>
+
+    <div class="relative z-10 max-w-2xl w-full text-center">
+      <div class="relative w-24 h-24 mx-auto mb-8">
+        <span class="ty-ring absolute inset-0 rounded-full border border-cyan-400/50"></span>
+        <span class="ty-ring b absolute inset-0 rounded-full border border-cyan-400/50"></span>
+        <div class="ty-badge relative w-24 h-24 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-[0_0_40px_rgba(34,211,238,0.35)]">
+          <svg class="w-11 h-11 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+            <path class="ty-check" pathLength="1" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
       </div>
-      <h1 class="text-2xl font-bold text-slate-900 tracking-tight mb-3">Inquiry Received</h1>
-      <p class="text-slate-600 leading-relaxed mb-8">
-        Thanks for reaching out. Our senior architects will review your submission and get back to you within 24 business hours.
+
+      <div class="ty-rise text-xs uppercase font-semibold text-cyan-300 tracking-widest mb-3" style="--d:.2s">Submission Received</div>
+      <h1 class="ty-rise text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4" style="--d:.3s">Inquiry Received</h1>
+      <p class="ty-rise text-lg text-slate-300 leading-relaxed max-w-lg mx-auto" style="--d:.4s">
+        Thanks for reaching out. We'll review your submission and get back to you within 24 business hours.
       </p>
-      <a href="/" class="inline-flex bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-lg transition duration-200 shadow-md shadow-blue-600/10">
-        Back to Homepage
-      </a>
-      <p class="text-xs text-slate-400 mt-8">
-        Need to reach us directly? Email <a href="mailto:info@mmcloudops.com" class="text-blue-600 hover:underline">info@mmcloudops.com</a>
+
+      <div class="ty-rise mt-10 text-left rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 sm:p-7" style="--d:.55s">
+        <div class="text-xs uppercase font-semibold text-slate-500 tracking-wider mb-5">What Happens Next</div>
+        <ol class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <li class="flex items-start gap-3">
+            <span class="w-7 h-7 shrink-0 rounded-full border border-blue-400/40 bg-blue-500/10 text-cyan-300 text-xs font-bold flex items-center justify-center">1</span>
+            <div><div class="text-sm font-semibold text-white">Your note is read personally</div><div class="text-xs text-slate-400 mt-0.5">No sales queue, no auto-responder maze.</div></div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="w-7 h-7 shrink-0 rounded-full border border-blue-400/40 bg-blue-500/10 text-cyan-300 text-xs font-bold flex items-center justify-center">2</span>
+            <div><div class="text-sm font-semibold text-white">We reply within 24 business hours</div><div class="text-xs text-slate-400 mt-0.5">With questions, or a proposed next step.</div></div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="w-7 h-7 shrink-0 rounded-full border border-blue-400/40 bg-blue-500/10 text-cyan-300 text-xs font-bold flex items-center justify-center">3</span>
+            <div><div class="text-sm font-semibold text-white">You get a clear, fixed scope</div><div class="text-xs text-slate-400 mt-0.5">Scope and pricing agreed before any work starts.</div></div>
+          </li>
+        </ol>
+      </div>
+
+      <div class="ty-rise flex flex-col sm:flex-row gap-3 justify-center mt-10" style="--d:.7s">
+        <a href="/" class="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold px-8 py-3.5 rounded-lg transition duration-200 shadow-lg shadow-blue-600/25">
+          Back to Homepage <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        </a>
+        <a href="/#services" class="inline-flex items-center justify-center border border-slate-600 hover:bg-slate-800 text-slate-200 font-semibold px-8 py-3.5 rounded-lg transition duration-200">
+          Explore Our Services
+        </a>
+      </div>
+
+      <p class="ty-rise text-xs text-slate-500 mt-8" style="--d:.8s">
+        Need to reach us directly? Email <a href="mailto:info@mmcloudops.com" class="text-blue-400 hover:underline">info@mmcloudops.com</a>
       </p>
     </div>
   </main>
