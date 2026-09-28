@@ -127,7 +127,7 @@
         </div>
 
         <div class="lg:col-span-7">
-          <form action="https://api.web3forms.com/submit" method="POST" class="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm space-y-6">
+          <form id="contactForm" action="https://api.web3forms.com/submit" method="POST" class="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm space-y-6">
             
             <input type="hidden" name="access_key" value="37a1870e-0bdf-4982-b450-69fc2c853f80">
             <input type="hidden" name="redirect" value="https://mmcloudops.com/thank-you">
@@ -147,8 +147,8 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Company Name</label>
-                <input type="text" name="company" placeholder="Acme SaaS Inc." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Company Name *</label>
+                <input type="text" name="company" required placeholder="Acme SaaS Inc." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
               </div>
               
               <div>
@@ -171,13 +171,27 @@
               <textarea name="project_description" required rows="5" placeholder="Briefly describe your current setup (e.g., Salesforce, NetSuite, Zuora), key bottlenecks, and primary project goals..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition"></textarea>
             </div>
 
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 rounded-lg transition duration-200 shadow-md shadow-blue-600/10">
+            <button id="submitBtn" type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 rounded-lg transition duration-200 shadow-md shadow-blue-600/10">
               Submit Intake Request
             </button>
 
             <div class="text-center text-xs text-slate-500">
               Protected by enterprise SSL encryption. Zero sales spam guaranteed.
             </div>
+          </form>
+
+          <!-- Hidden Salesforce Web-to-Lead form; filled and submitted by JS into the hidden iframe below. -->
+          <iframe name="sfFrame" id="sfFrame" title="Salesforce submission" style="display:none;width:0;height:0;border:0;" tabindex="-1" aria-hidden="true"></iframe>
+          <form id="sfLeadForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00Dg800000GiegT" method="POST" target="sfFrame" accept-charset="UTF-8" style="display:none;">
+            <input type="hidden" name="oid" value="00Dg800000GiegT">
+            <input type="hidden" name="retURL" value="https://mmcloudops.com/thank-you">
+            <input type="hidden" name="lead_source" value="Web">
+            <input type="hidden" name="first_name" id="sf_first_name">
+            <input type="hidden" name="last_name" id="sf_last_name">
+            <input type="hidden" name="email" id="sf_email">
+            <input type="hidden" name="company" id="sf_company">
+            <input type="hidden" name="00Ng800000mor5V" id="sf_practice_area">
+            <input type="hidden" name="description" id="sf_description">
           </form>
         </div>
 
@@ -251,14 +265,75 @@
   </footer>
 
   <script>
-    // If a user navigates back to this page after submitting (browser
-    // back button), reset the form instead of showing stale filled-in data.
-    window.addEventListener('pageshow', function (event) {
-      if (event.persisted) {
-        var form = document.querySelector('form[action*="web3forms"]');
-        if (form) form.reset();
+    (function () {
+      var form = document.getElementById('contactForm');
+      var sfForm = document.getElementById('sfLeadForm');
+      var sfFrame = document.getElementById('sfFrame');
+      var btn = document.getElementById('submitBtn');
+      var btnLabel = btn.textContent;
+      var THANK_YOU = '/thank-you';
+
+      function splitName(full) {
+        full = (full || '').trim().replace(/\s+/g, ' ');
+        var i = full.lastIndexOf(' ');
+        if (i === -1) return { first: '', last: full };
+        return { first: full.slice(0, i), last: full.slice(i + 1) };
       }
-    });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var fd = new FormData(form);
+
+        // Honeypot: bots tick the hidden checkbox. Block both destinations.
+        if (fd.get('botcheck')) return;
+
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+
+        try {
+          // Leg A: Salesforce Web-to-Lead via hidden form -> hidden iframe (no CORS needed).
+          var n = splitName(fd.get('name'));
+          document.getElementById('sf_first_name').value = n.first;
+          document.getElementById('sf_last_name').value = n.last;
+          document.getElementById('sf_email').value = fd.get('email') || '';
+          document.getElementById('sf_company').value = fd.get('company') || '';
+          document.getElementById('sf_practice_area').value = fd.get('service_type') || '';
+          document.getElementById('sf_description').value = fd.get('project_description') || '';
+
+          var sfDone = new Promise(function (resolve) {
+            sfFrame.addEventListener('load', resolve, { once: true });
+          });
+          sfForm.submit();
+
+          // Leg B: Web3Forms AJAX, in parallel.
+          var payload = {};
+          fd.forEach(function (v, k) { if (k !== 'botcheck' && k !== 'redirect') payload[k] = v; });
+          var w3Done = fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(payload)
+          }).catch(function () {});
+
+          // Redirect once both legs settle, capped at 4s so the visitor is never stuck.
+          Promise.race([
+            Promise.all([sfDone, w3Done]),
+            new Promise(function (r) { setTimeout(r, 4000); })
+          ]).then(function () { window.location.href = THANK_YOU; });
+        } catch (err) {
+          // Anything unexpected: fall back to the native Web3Forms POST.
+          form.submit();
+        }
+      });
+
+      // Back-button after submitting: reset the form instead of showing stale data.
+      window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+          form.reset();
+          btn.disabled = false;
+          btn.textContent = btnLabel;
+        }
+      });
+    })();
   </script>
 
 </body>
