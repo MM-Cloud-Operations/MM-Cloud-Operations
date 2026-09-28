@@ -13,6 +13,32 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="assets/site.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 3D tilt cards */
+    .tilt-card { position: relative; transform-style: preserve-3d; will-change: transform; }
+    .tilt-card.tilt-card { transition: transform .18s ease-out, box-shadow .3s ease, border-color .3s ease; }
+    .tilt-card::before, .tilt-card::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit;
+      pointer-events: none; opacity: 0; transition: opacity .3s ease;
+    }
+    .tilt-card::before { background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,.13), transparent 65%); }
+    .tilt-card::after {
+      padding: 1.5px;
+      background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), #3b82f6, #22d3ee 45%, transparent 75%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    }
+    .tilt-card.is-hover { box-shadow: 0 24px 44px -14px rgba(37,99,235,.35); }
+    .tilt-card.is-hover::before, .tilt-card.is-hover::after { opacity: 1; }
+    .tilt-pop { transition: transform .25s ease; }
+    .tilt-card.is-hover .tilt-pop { transform: translateZ(34px); }
+    .tilt-card.pre { opacity: 0; }
+    .tilt-card.in { animation: cardRise .7s cubic-bezier(.2,.7,.2,1) var(--d, 0s) backwards; }
+    @keyframes cardRise {
+      from { opacity: 0; transform: perspective(900px) translateY(34px) rotateX(12deg); }
+    }
+  </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white min-h-screen flex flex-col justify-between">
 
@@ -85,62 +111,92 @@
 
   <main class="flex-grow">
 
-    <section class="py-20 bg-white border-b border-slate-200">
-      <div class="max-w-4xl mx-auto px-6 text-center">
-        <div class="inline-flex items-center space-x-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5 text-xs font-semibold text-blue-700 mb-6">
-          <span>Join Our Team</span>
+    <section class="relative py-20 md:py-28 bg-[#0B0F19] border-b border-slate-800 overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,#1e293b40_1px,transparent_1px),linear-gradient(to_bottom,#1e293b40_1px,transparent_1px)] bg-[size:4rem_4rem]" aria-hidden="true"></div>
+      <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(55% 75% at 78% 50%, rgba(37,99,235,0.28), transparent 70%)" aria-hidden="true"></div>
+      <div class="hidden md:block absolute inset-y-0 right-0 w-1/2 pointer-events-none" aria-hidden="true">
+        <canvas id="heroNodeCanvas" class="w-full h-full"></canvas>
+      </div>
+      <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="max-w-2xl">
+          <div class="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-400/30 rounded-full px-4 py-1.5 text-xs font-semibold text-blue-300 mb-6">
+            <span>Join Our Team</span>
+          </div>
+          <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6">
+            Small Team, Senior Craft, Real Ownership
+          </h1>
+          <p class="text-lg sm:text-xl text-slate-300 leading-relaxed mb-8">
+            We're building MM Cloud Operations deliberately — a small group of senior practitioners rather than a large bench. If that sounds like how you want to work, we'd like to hear from you.
+          </p>
+          <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300">
+            <span class="relative flex h-2 w-2"><span class="absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-60 animate-ping"></span><span class="relative inline-flex h-2 w-2 rounded-full bg-cyan-400"></span></span>
+            No open roles right now — we'd still like to hear from you
+          </div>
         </div>
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
-          Small Team, Senior Craft, Real Ownership
-        </h1>
-        <p class="text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
-          We're building MM Cloud Operations deliberately — a small group of senior practitioners rather than a large bench. If that sounds like how you want to work, we'd like to hear from you.
-        </p>
       </div>
     </section>
 
-    <section class="py-20 bg-slate-200/70 border-b border-slate-300">
-      <div class="max-w-7xl mx-auto px-6">
+    <section class="relative py-24 bg-slate-200/70 border-b border-slate-300 overflow-hidden">
+      <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-blue-300/20 blur-3xl pointer-events-none" aria-hidden="true"></div>
+      <div class="max-w-7xl mx-auto px-6 relative">
         <div class="text-center max-w-2xl mx-auto mb-16">
-          <h2 class="text-3xl font-bold text-slate-900 tracking-tight mb-4">How We Work</h2>
+          <div class="text-xs uppercase font-semibold text-blue-600 tracking-widest mb-3">Our Principles</div>
+          <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-4">How We Work</h2>
           <p class="text-slate-600">The principles that shape how we hire, and how we expect to work together.</p>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
-            <h3 class="text-lg font-semibold text-slate-900 mb-3">Ownership Over Tickets</h3>
+          <div class="tilt-card relative bg-white border border-slate-200 p-7 rounded-2xl shadow-sm">
+            <div class="tilt-pop w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 text-white flex items-center justify-center shadow-md shadow-blue-600/25 mb-5"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg></div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">Ownership Over Tickets</h3>
             <p class="text-slate-600 text-sm leading-relaxed">We hire people who can own a client relationship and a system end-to-end, not just close out assigned tasks. You'll have direct client contact from day one.</p>
           </div>
-          <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
-            <h3 class="text-lg font-semibold text-slate-900 mb-3">Remote & Flexible</h3>
+          <div class="tilt-card relative bg-white border border-slate-200 p-7 rounded-2xl shadow-sm">
+            <div class="tilt-pop w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 text-white flex items-center justify-center shadow-md shadow-blue-600/25 mb-5"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg></div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">Remote &amp; Flexible</h3>
             <p class="text-slate-600 text-sm leading-relaxed">We care about the quality of the work and how you communicate with clients, not where or exactly when you do it.</p>
           </div>
-          <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
-            <h3 class="text-lg font-semibold text-slate-900 mb-3">Merit-Based, Open to Everyone</h3>
+          <div class="tilt-card relative bg-white border border-slate-200 p-7 rounded-2xl shadow-sm">
+            <div class="tilt-pop w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 text-white flex items-center justify-center shadow-md shadow-blue-600/25 mb-5"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.97zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 01-2.031.352 5.989 5.989 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.97z"/></svg></div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">Merit-Based, Open to Everyone</h3>
             <p class="text-slate-600 text-sm leading-relaxed">We evaluate people on skill, judgment, and how they work with clients — not background. We welcome applicants of any race, gender, age, religion, disability status, or nationality.</p>
           </div>
-          <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
-            <h3 class="text-lg font-semibold text-slate-900 mb-3">Depth Over Headcount</h3>
+          <div class="tilt-card relative bg-white border border-slate-200 p-7 rounded-2xl shadow-sm">
+            <div class="tilt-pop w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 text-white flex items-center justify-center shadow-md shadow-blue-600/25 mb-5"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3"/></svg></div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">Depth Over Headcount</h3>
             <p class="text-slate-600 text-sm leading-relaxed">We're growing slowly and intentionally. We'd rather bring on the right person a bit later than fill a seat quickly.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="py-20 bg-white">
-      <div class="max-w-4xl mx-auto px-6">
-        <div class="bg-[#0B0F19] rounded-2xl p-10 sm:p-12 text-center shadow-xl">
-          <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">No Open Roles Right Now</h2>
-          <p class="text-slate-400 leading-relaxed max-w-xl mx-auto mb-8">
-            We don't have specific positions posted at the moment — we're a small team and we hire when the work genuinely calls for it. If you think you'd be a strong fit for how we work, we'd still like to hear from you.
-          </p>
-          <a href="mailto:careers@mmcloudops.com" class="inline-flex bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg transition duration-200 shadow-md shadow-blue-600/20">
-            Email careers@mmcloudops.com
-          </a>
-          <p class="text-slate-500 text-xs mt-6">
-            Tell us a bit about your background and what kind of work you're looking for. We read every note personally.
-          </p>
+    <section class="relative py-24 bg-[#0B0F19] overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,#1e293b40_1px,transparent_1px),linear-gradient(to_bottom,#1e293b40_1px,transparent_1px)] bg-[size:4rem_4rem]" aria-hidden="true"></div>
+      <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(50% 70% at 50% 100%, rgba(37,99,235,0.28), transparent 70%)" aria-hidden="true"></div>
+      <div class="max-w-4xl mx-auto px-6 relative z-10 text-center">
+        <div class="w-14 h-14 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-[0_0_30px_rgba(34,211,238,0.3)]"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-4">No Open Roles Right Now</h2>
+        <p class="text-slate-300 leading-relaxed max-w-xl mx-auto mb-10">
+          We don't have specific positions posted at the moment — we're a small team and we hire when the work genuinely calls for it. If you think you'd be a strong fit for how we work, we'd still like to hear from you.
+        </p>
+        <div class="text-left rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 sm:p-7 mb-10">
+          <ol class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <li class="flex items-start gap-3">
+              <span class="w-7 h-7 shrink-0 rounded-full border border-blue-400/40 bg-blue-500/10 text-cyan-300 text-xs font-bold flex items-center justify-center">1</span>
+              <div><div class="text-sm font-semibold text-white">Send a short note</div><div class="text-xs text-slate-400 mt-0.5">Email careers@mmcloudops.com.</div></div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-7 h-7 shrink-0 rounded-full border border-blue-400/40 bg-blue-500/10 text-cyan-300 text-xs font-bold flex items-center justify-center">2</span>
+              <div><div class="text-sm font-semibold text-white">Tell us about you</div><div class="text-xs text-slate-400 mt-0.5">Your background and the kind of work you're looking for.</div></div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-7 h-7 shrink-0 rounded-full border border-blue-400/40 bg-blue-500/10 text-cyan-300 text-xs font-bold flex items-center justify-center">3</span>
+              <div><div class="text-sm font-semibold text-white">We read it personally</div><div class="text-xs text-slate-400 mt-0.5">Every note is read personally.</div></div>
+            </li>
+          </ol>
         </div>
+        <a href="mailto:careers@mmcloudops.com?subject=Careers%20inquiry" class="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold px-8 py-4 rounded-lg transition duration-200 shadow-lg shadow-blue-600/25">
+          Email careers@mmcloudops.com <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        </a>
       </div>
     </section>
 
@@ -209,6 +265,283 @@
       All product names mentioned are trademarks of their respective owners. MM Cloud Operations is an independent consultancy, not affiliated with, sponsored by, or endorsed by them.
     </div>
   </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // Glowing data globe: depth-faded dots, arcs between hub systems, light pulses travelling along them.
+    (function () {
+      var canvas = document.getElementById('heroNodeCanvas');
+      if (!canvas || !window.THREE || !canvas.clientWidth || !canvas.clientHeight) return;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+      } catch (e) { return; }
+      var PR = Math.min(window.devicePixelRatio || 1, 2);
+      renderer.setPixelRatio(PR);
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+      renderer.setClearColor(0x000000, 0);
+
+      var scene = new THREE.Scene();
+      var CAM = 22, R = 5, NEAR = CAM - R, FAR = CAM + R;
+      var camera = new THREE.PerspectiveCamera(40, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+      camera.position.z = CAM;
+
+      var globe = new THREE.Group();
+      scene.add(globe);
+
+      // Soft atmospheric glow behind the globe
+      var gc = document.createElement('canvas'); gc.width = gc.height = 256;
+      var gx = gc.getContext('2d'), gr = gx.createRadialGradient(128, 128, 20, 128, 128, 128);
+      gr.addColorStop(0, 'rgba(59,130,246,0.55)'); gr.addColorStop(0.45, 'rgba(37,99,235,0.18)'); gr.addColorStop(1, 'rgba(37,99,235,0)');
+      gx.fillStyle = gr; gx.fillRect(0, 0, 256, 256);
+      var glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(gc), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false }));
+      glow.scale.set(19, 19, 1); glow.position.z = -3;
+      scene.add(glow);
+
+      // Faint body so the globe reads as a solid volume
+      var body = new THREE.Mesh(new THREE.SphereGeometry(R * 0.985, 48, 32),
+        new THREE.MeshBasicMaterial({ color: 0x0a1330, transparent: true, opacity: 0.6, depthWrite: false }));
+      body.renderOrder = -1;
+      globe.add(body);
+
+      // Shared depth-fade: nearer to camera = brighter and bigger
+      var depthGLSL = 'float k = clamp(1.0 - (d - uNear) / (uFar - uNear), 0.0, 1.0);';
+      function pointMat() {
+        return new THREE.ShaderMaterial({
+          uniforms: { pr: { value: PR }, uNear: { value: NEAR }, uFar: { value: FAR } },
+          vertexShader: 'attribute vec3 aColor; attribute float aSize; attribute float aAlpha; uniform float pr, uNear, uFar; varying vec3 vC; varying float vA;' +
+            'void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); float d = -mv.z; ' + depthGLSL +
+            ' vA = (0.1 + 0.9 * k) * aAlpha; vC = aColor; gl_PointSize = aSize * pr * (22.0 / d) * (0.7 + 0.5 * k); gl_Position = projectionMatrix * mv; }',
+          fragmentShader: 'varying vec3 vC; varying float vA; void main(){ float r = length(gl_PointCoord - 0.5) * 2.0; if (r > 1.0) discard; gl_FragColor = vec4(vC, pow(1.0 - r, 1.5) * vA); }',
+          transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+        });
+      }
+      function lineMat(color, op) {
+        return new THREE.ShaderMaterial({
+          uniforms: { uNear: { value: NEAR }, uFar: { value: FAR }, uColor: { value: new THREE.Color(color) }, uOp: { value: op } },
+          vertexShader: 'attribute float aT; uniform float uNear, uFar, uOp; varying float vA;' +
+            'void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); float d = -mv.z; ' + depthGLSL +
+            ' vA = (0.06 + 0.94 * k) * uOp * (0.3 + 0.7 * sin(3.14159 * aT)); gl_Position = projectionMatrix * mv; }',
+          fragmentShader: 'uniform vec3 uColor; varying float vA; void main(){ gl_FragColor = vec4(uColor, vA); }',
+          transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+        });
+      }
+      function makePoints(pos, col, size, alpha) {
+        var g = new THREE.BufferGeometry();
+        g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        g.setAttribute('aColor', new THREE.BufferAttribute(col, 3));
+        g.setAttribute('aSize', new THREE.BufferAttribute(size, 1));
+        g.setAttribute('aAlpha', new THREE.BufferAttribute(alpha, 1));
+        var o = new THREE.Points(g, pointMat());
+        o.frustumCulled = false;
+        return o;
+      }
+
+      // Surface dots (Fibonacci lattice)
+      var N = 900, golden = Math.PI * (3 - Math.sqrt(5));
+      var dp = new Float32Array(N * 3), dc = new Float32Array(N * 3), ds = new Float32Array(N), da = new Float32Array(N);
+      var unit = [];
+      for (var i = 0; i < N; i++) {
+        var y = 1 - (i / (N - 1)) * 2, rad = Math.sqrt(1 - y * y), th = golden * i;
+        var ux = Math.cos(th) * rad, uy = y, uz = Math.sin(th) * rad;
+        unit.push([ux, uy, uz]);
+        dp[i * 3] = ux * R; dp[i * 3 + 1] = uy * R; dp[i * 3 + 2] = uz * R;
+        var v = 0.75 + Math.random() * 0.25;
+        dc[i * 3] = 0.30 * v; dc[i * 3 + 1] = 0.55 * v; dc[i * 3 + 2] = 1.0 * v;
+        ds[i] = 1.4 + Math.random() * 1.2; da[i] = 0.55;
+      }
+      globe.add(makePoints(dp, dc, ds, da));
+
+      // Hub systems: bright nodes with a soft halo
+      var H = 12, hubs = [];
+      for (var h = 0; h < H; h++) hubs.push(unit[Math.floor(((h + 0.5) / H) * N)]);
+      var hp = new Float32Array(H * 6), hc = new Float32Array(H * 6), hs = new Float32Array(H * 2), ha = new Float32Array(H * 2);
+      for (var h2 = 0; h2 < H; h2++) {
+        for (var q = 0; q < 2; q++) {
+          var o = (h2 * 2 + q);
+          hp[o * 3] = hubs[h2][0] * R; hp[o * 3 + 1] = hubs[h2][1] * R; hp[o * 3 + 2] = hubs[h2][2] * R;
+          var cy = h2 % 3 === 0;
+          hc[o * 3] = cy ? 0.13 : 0.55; hc[o * 3 + 1] = cy ? 0.83 : 0.75; hc[o * 3 + 2] = cy ? 0.93 : 1.0;
+          hs[o] = q === 0 ? 8 : 26; ha[o] = q === 0 ? 1 : 0.22;
+        }
+      }
+      globe.add(makePoints(hp, hc, hs, ha));
+
+      // Arcs between hubs, lifted off the surface
+      var S = 40, arcs = [];
+      function slerp(a, b, t, om) {
+        var s1 = Math.sin((1 - t) * om) / Math.sin(om), s2 = Math.sin(t * om) / Math.sin(om);
+        return [a[0] * s1 + b[0] * s2, a[1] * s1 + b[1] * s2, a[2] * s1 + b[2] * s2];
+      }
+      [3, 5].forEach(function (step) {
+        for (var a = 0; a < H; a++) {
+          var A = hubs[a], B = hubs[(a + step) % H];
+          var dot = Math.max(-1, Math.min(1, A[0] * B[0] + A[1] * B[1] + A[2] * B[2]));
+          var om = Math.acos(dot);
+          if (om < 0.5 || om > 3.0) continue;
+          var pts = new Float32Array((S + 1) * 3), lift = 0.1 + 0.28 * (om / Math.PI);
+          for (var t = 0; t <= S; t++) {
+            var f = t / S, p = slerp(A, B, f, om), r = R * (1 + lift * Math.sin(Math.PI * f));
+            pts[t * 3] = p[0] * r; pts[t * 3 + 1] = p[1] * r; pts[t * 3 + 2] = p[2] * r;
+          }
+          arcs.push(pts);
+        }
+      });
+      var AL = arcs.length;
+      var lp = new Float32Array(AL * S * 6), lt = new Float32Array(AL * S * 2);
+      arcs.forEach(function (pts, ai) {
+        for (var t = 0; t < S; t++) {
+          var base = (ai * S + t) * 6;
+          for (var c = 0; c < 3; c++) { lp[base + c] = pts[t * 3 + c]; lp[base + 3 + c] = pts[(t + 1) * 3 + c]; }
+          lt[(ai * S + t) * 2] = t / S; lt[(ai * S + t) * 2 + 1] = (t + 1) / S;
+        }
+      });
+      var lg = new THREE.BufferGeometry();
+      lg.setAttribute('position', new THREE.BufferAttribute(lp, 3));
+      lg.setAttribute('aT', new THREE.BufferAttribute(lt, 1));
+      var arcLines = new THREE.LineSegments(lg, lineMat(0x60a5fa, 0.75));
+      arcLines.frustumCulled = false;
+      globe.add(arcLines);
+
+      // Light pulses travelling along the arcs (head + fading trail)
+      var TR = 4, trailSize = [9, 6.5, 4.5, 3], trailAlpha = [1, 0.6, 0.35, 0.18];
+      var PN = AL * TR, pp = new Float32Array(PN * 3), pc = new Float32Array(PN * 3), ps = new Float32Array(PN), pa = new Float32Array(PN);
+      var speed = [], offset = [];
+      for (var a2 = 0; a2 < AL; a2++) {
+        speed.push(0.09 + Math.random() * 0.1); offset.push(Math.random());
+        for (var k2 = 0; k2 < TR; k2++) {
+          var idx = a2 * TR + k2;
+          pc[idx * 3] = 0.75; pc[idx * 3 + 1] = 0.95; pc[idx * 3 + 2] = 1.0;
+          ps[idx] = trailSize[k2]; pa[idx] = trailAlpha[k2];
+        }
+      }
+      var pulses = makePoints(pp, pc, ps, pa);
+      globe.add(pulses);
+
+      // Orbit rings with a travelling node
+      var rings = [];
+      function addRing(radius, tx, tz, spin) {
+        var tilt = new THREE.Group(); tilt.rotation.x = tx; tilt.rotation.z = tz;
+        var spinG = new THREE.Group();
+        var seg = 128, rp = new Float32Array(seg * 3), rt = new Float32Array(seg);
+        for (var i = 0; i < seg; i++) {
+          var an = (i / seg) * Math.PI * 2;
+          rp[i * 3] = Math.cos(an) * radius; rp[i * 3 + 2] = Math.sin(an) * radius; rt[i] = 0.5;
+        }
+        var rg = new THREE.BufferGeometry();
+        rg.setAttribute('position', new THREE.BufferAttribute(rp, 3));
+        rg.setAttribute('aT', new THREE.BufferAttribute(rt, 1));
+        var loop = new THREE.LineLoop(rg, lineMat(0x3b82f6, 0.32));
+        loop.frustumCulled = false;
+        spinG.add(loop);
+        var nd = makePoints(new Float32Array([radius, 0, 0, -radius, 0, 0]), new Float32Array([0.55, 0.85, 1, 0.55, 0.85, 1]), new Float32Array([9, 9]), new Float32Array([1, 1]));
+        spinG.add(nd);
+        tilt.add(spinG); globe.add(tilt);
+        rings.push({ g: spinG, s: spin });
+      }
+      addRing(R * 1.3, 1.15, 0.25, 0.35);
+      addRing(R * 1.5, -0.55, -0.6, -0.22);
+
+      // Mouse parallax
+      var mx = 0, my = 0, tmx = 0, tmy = 0;
+      window.addEventListener('mousemove', function (e) {
+        tmx = (e.clientX / window.innerWidth) * 2 - 1;
+        tmy = (e.clientY / window.innerHeight) * 2 - 1;
+      });
+
+      function update(t) {
+        mx += (tmx - mx) * 0.05; my += (tmy - my) * 0.05;
+        var pa2 = pulses.geometry.attributes.position.array;
+        for (var a = 0; a < AL; a++) {
+          var pts = arcs[a], head = (t * speed[a] + offset[a]) % 1;
+          for (var k = 0; k < TR; k++) {
+            var tt = Math.max(0, head - k * 0.018) * S, i0 = Math.min(S - 1, Math.floor(tt)), f = tt - i0, o = (a * TR + k) * 3;
+            for (var c = 0; c < 3; c++) pa2[o + c] = pts[i0 * 3 + c] + (pts[(i0 + 1) * 3 + c] - pts[i0 * 3 + c]) * f;
+          }
+        }
+        pulses.geometry.attributes.position.needsUpdate = true;
+        for (var r = 0; r < rings.length; r++) rings[r].g.rotation.y = t * rings[r].s;
+        globe.rotation.y = t * 0.12 + mx * 0.4;
+        globe.rotation.x = 0.3 + my * 0.2;
+        renderer.render(scene, camera);
+      }
+
+      var t = 0, last = 0, running = false;
+      function frame(now) {
+        if (!running) return;
+        t += Math.min((now - last) / 1000, 0.1);
+        last = now;
+        update(t);
+        requestAnimationFrame(frame);
+      }
+      function start() {
+        if (running) return;
+        running = true; last = performance.now();
+        requestAnimationFrame(frame);
+      }
+      function resize() {
+        if (!canvas.clientWidth || !canvas.clientHeight) return;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+        update(t);
+      }
+      window.addEventListener('resize', resize);
+
+      update(0);
+      if (reduceMotion) return;
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          if (entries[0].isIntersecting) start(); else running = false;
+        }).observe(canvas);
+      } else { start(); }
+    })();
+  </script>
+
+  <script>
+    // 3D tilt + scroll-in for cards
+    (function () {
+      var cards = document.querySelectorAll('.tilt-card');
+      if (!cards.length) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var canHover = window.matchMedia('(hover: hover)').matches;
+
+      cards.forEach(function (el, i) { el.style.setProperty('--d', (i % 3) * 0.09 + 's'); });
+
+      if (!reduce && 'IntersectionObserver' in window) {
+        cards.forEach(function (el) { el.classList.add('pre'); });
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            en.target.classList.remove('pre');
+            en.target.classList.add('in');
+            io.unobserve(en.target);
+          });
+        }, { threshold: 0.15 });
+        cards.forEach(function (el) { io.observe(el); });
+      }
+
+      if (reduce || !canHover) return;
+      cards.forEach(function (el) {
+        el.addEventListener('pointermove', function (e) {
+          if (e.pointerType !== 'mouse') return;
+          var r = el.getBoundingClientRect();
+          var x = e.clientX - r.left, y = e.clientY - r.top;
+          var ry = (x / r.width - 0.5) * 14, rx = (0.5 - y / r.height) * 14;
+          el.style.setProperty('--mx', x + 'px');
+          el.style.setProperty('--my', y + 'px');
+          el.style.transform = 'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateY(-4px)';
+          el.classList.add('is-hover');
+        });
+        el.addEventListener('pointerleave', function () {
+          el.style.transform = '';
+          el.classList.remove('is-hover');
+        });
+      });
+    })();
+  </script>
 
 </body>
 </html>
